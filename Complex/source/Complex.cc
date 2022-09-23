@@ -32,7 +32,7 @@ double Complex::arg() const
 
 bool Complex::operator==(const Complex& rhs) const
 {
-    return (fabs(re_ - rhs.re_) <= FIT_TOLERANCE) && (fabs(im_ - rhs.im_) <= FIT_TOLERANCE);
+    return (fabs(re_ - rhs.re_) <= COMPARE_ERROR) && (fabs(im_ - rhs.im_) <= COMPARE_ERROR);
 }
 
 bool Complex::operator!=(const Complex& rhs) const
@@ -174,14 +174,14 @@ Complex operator/(const Complex& lhs, double rhs)
 
 std::ostream& operator<<(std::ostream& ostream, const math::Complex& z)
 {
-    if (fabs(z.re_) >= math::FIT_TOLERANCE)
+    if (fabs(z.re_) >= math::COMPARE_ERROR)
         ostream << z.re_;
 
     ostream << " ";
-    if (z.im_ >= math::FIT_TOLERANCE)
+    if (z.im_ >= math::COMPARE_ERROR)
         ostream << "+ ";
 
-    if (fabs(z.im_) >= math::FIT_TOLERANCE)
+    if (fabs(z.im_) >= math::COMPARE_ERROR)
         ostream << z.im_ << "i";
     return ostream;
 }

@@ -6,7 +6,7 @@
 namespace math
 {
 
-const double FIT_TOLERANCE = 0.000001;
+const double COMPARE_ERROR = 0.000001;
 
 struct Complex
 {

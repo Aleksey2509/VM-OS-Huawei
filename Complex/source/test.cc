@@ -52,7 +52,7 @@ bool absTest()
     double expectedFirstAbs = 2.061553;
     double expectedSecondAbs = 3.465545;
 
-    if ((fabs(z1Abs - expectedFirstAbs) > FIT_TOLERANCE) || (fabs(z2Abs - expectedSecondAbs) > FIT_TOLERANCE))
+    if ((fabs(z1Abs - expectedFirstAbs) > COMPARE_ERROR) || (fabs(z2Abs - expectedSecondAbs) > COMPARE_ERROR))
     {
         std::cout << "abs test failed: got " << z1.abs() << " " << z2.abs()
         << "instead of " << expectedFirstAbs << " " << expectedSecondAbs << std::endl;
