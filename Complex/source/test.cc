@@ -47,15 +47,28 @@ bool unaryMinusTest()
 
 bool absTest()
 {
-    double z1Abs = z1.abs();
-    double z2Abs = z2.abs();
     double expectedFirstAbs = 2.061553;
     double expectedSecondAbs = 3.465545;
 
-    if ((fabs(z1Abs - expectedFirstAbs) > COMPARE_ERROR) || (fabs(z2Abs - expectedSecondAbs) > COMPARE_ERROR))
+    if ((fabs(z1.abs() - expectedFirstAbs) > COMPARE_ERROR) || (fabs(z2.abs() - expectedSecondAbs) > COMPARE_ERROR))
     {
         std::cout << "abs test failed: got " << z1.abs() << " " << z2.abs()
         << "instead of " << expectedFirstAbs << " " << expectedSecondAbs << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+bool argTest()
+{
+    double expectedFirstArg = 0.88848;
+    double expectedSecondArg = 0.805803;
+
+    if ((fabs(z1.arg() - expectedFirstArg) > COMPARE_ERROR) || (fabs(z2.arg() - expectedSecondArg) > COMPARE_ERROR))
+    {
+        std::cout << "arg test failed: got " << z1.arg() << " " << z2.arg()
+        << "instead of " << expectedFirstArg << " " << expectedSecondArg << std::endl;
         return false;
     }
 
@@ -190,6 +203,7 @@ int main()
     assignTest();
     unaryMinusTest();
     absTest();
+    argTest();
     addTest();
     subTest();
     mulTest();

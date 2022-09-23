@@ -14,7 +14,7 @@ struct Complex
     double re_ = 0.0;
     double im_ = 0.0;
 
-    Complex() = default;
+    Complex();
     Complex(double re, double im);
     Complex(const Complex& another);
 
