@@ -114,30 +114,30 @@ Complex Complex::operator-() const
     return -1.0 * (*this);
 }
 
-Complex operator+(const Complex& lhs, const Complex& rhs)
+Complex Complex::operator+(const Complex& rhs) const
 {
-    Complex tmp{lhs};
+    Complex tmp{*this};
     tmp += rhs;
     return tmp;
 }
 
-Complex operator-(const Complex& lhs, const Complex& rhs)
+Complex Complex::operator-(const Complex& rhs) const
 {
-    Complex tmp{lhs};
+    Complex tmp{*this};
     tmp -= rhs;
     return tmp;
 }
 
-Complex operator*(const Complex& lhs, const Complex& rhs)
+Complex Complex::operator*(const Complex& rhs) const
 {
-    Complex tmp{lhs};
+    Complex tmp{*this};
     tmp *= rhs;
     return tmp;
 }
 
-Complex operator/(const Complex& lhs, const Complex& rhs)
+Complex Complex::operator/(const Complex& rhs) const
 {
-    Complex tmp{lhs};
+    Complex tmp{*this};
     tmp /= rhs;
     return tmp;
 }
@@ -174,14 +174,14 @@ Complex operator/(const Complex& lhs, double rhs)
 
 std::ostream& operator<<(std::ostream& ostream, const math::Complex& z)
 {
-    if (fabs(z.re_) >= math::COMPARE_ERROR)
+    if (fabs(z.re_) >= math::Complex::COMPARE_ERROR)
         ostream << z.re_;
 
     ostream << " ";
-    if (z.im_ >= math::COMPARE_ERROR)
+    if (z.im_ >= math::Complex::COMPARE_ERROR)
         ostream << "+ ";
 
-    if (fabs(z.im_) >= math::COMPARE_ERROR)
+    if (fabs(z.im_) >= math::Complex::COMPARE_ERROR)
         ostream << z.im_ << "i";
     return ostream;
 }

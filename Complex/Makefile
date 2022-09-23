@@ -6,17 +6,26 @@ BUILD = build
 HEADL = include
 
 SRCL = source
-SRCFILES = test.cc Complex.cc
+SRCFILES = Complex.cc
 SRC := $(addprefix $(SRCL)/, $(SRCFILES))
+
+TESTL = tests
+TESTFILES = test.cc
+TEST := $(addprefix $(TESTL)/, $(TESTFILES))
 
 OBJL = $(BUILD)/objfiles
 OBJECTS = $(SRCFILES:.cc=.o)
+OBJECTS += $(TESTFILES:.cc=.o)
 OBJ := $(addprefix $(OBJL)/, $(OBJECTS))
 
 MKDIR = @mkdir -p $(@D)
 RM = rm -rf
 
 $(OBJL)/%.o: $(SRCL)/%.cc
+	$(MKDIR)
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
+
+$(OBJL)/%.o: $(TESTL)/%.cc
 	$(MKDIR)
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
 

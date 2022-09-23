@@ -6,10 +6,10 @@
 namespace math
 {
 
-const double COMPARE_ERROR = 0.000001;
 
 struct Complex
 {
+    constexpr static double COMPARE_ERROR = 0.000001;
 
     double re_ = 0.0;
     double im_ = 0.0;
@@ -35,14 +35,15 @@ struct Complex
     Complex& operator*=(double rhs);
     Complex& operator/=(double rhs);
 
+    Complex operator+(const Complex& rhs) const;
+    Complex operator-(const Complex& rhs) const;
+    Complex operator*(const Complex& rhs) const;
+    Complex operator/(const Complex& rhs) const;
+
     Complex operator-() const;
 
 };
 
-Complex operator+(const Complex& lhs, const Complex& rhs);
-Complex operator-(const Complex& lhs, const Complex& rhs);
-Complex operator*(const Complex& lhs, const Complex& rhs);
-Complex operator/(const Complex& lhs, const Complex& rhs);
 
 Complex operator*(const Complex& lhs, double rhs);
 Complex operator*(double lhs, const Complex& rhs);

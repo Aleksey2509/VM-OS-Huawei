@@ -50,7 +50,8 @@ bool absTest()
     double expectedFirstAbs = 2.061553;
     double expectedSecondAbs = 3.465545;
 
-    if ((fabs(z1.abs() - expectedFirstAbs) > COMPARE_ERROR) || (fabs(z2.abs() - expectedSecondAbs) > COMPARE_ERROR))
+    if ((fabs(z1.abs() - expectedFirstAbs) > Complex::COMPARE_ERROR) ||
+        (fabs(z2.abs() - expectedSecondAbs) > Complex::COMPARE_ERROR))
     {
         std::cout << "abs test failed: got " << z1.abs() << " " << z2.abs()
         << "instead of " << expectedFirstAbs << " " << expectedSecondAbs << std::endl;
@@ -65,7 +66,8 @@ bool argTest()
     double expectedFirstArg = 0.88848;
     double expectedSecondArg = 0.805803;
 
-    if ((fabs(z1.arg() - expectedFirstArg) > COMPARE_ERROR) || (fabs(z2.arg() - expectedSecondArg) > COMPARE_ERROR))
+    if ((fabs(z1.arg() - expectedFirstArg) > Complex::COMPARE_ERROR) ||
+        (fabs(z2.arg() - expectedSecondArg) > Complex::COMPARE_ERROR))
     {
         std::cout << "arg test failed: got " << z1.arg() << " " << z2.arg()
         << "instead of " << expectedFirstArg << " " << expectedSecondArg << std::endl;
@@ -199,17 +201,17 @@ bool divEqTest()
 
 int main()
 {
-    equalTest();
-    assignTest();
-    unaryMinusTest();
-    absTest();
-    argTest();
-    addTest();
-    subTest();
-    mulTest();
-    divTest();
-    addEqTest();
-    subEqTest();
-    mulEqTest();
-    divEqTest();
+    return  equalTest() &&
+            assignTest() &&
+            unaryMinusTest() &&
+            absTest() &&
+            argTest() &&
+            addTest() &&
+            subTest() &&
+            mulTest() &&
+            divTest() &&
+            addEqTest() &&
+            subEqTest() &&
+            mulEqTest() &&
+            divEqTest();
 }
