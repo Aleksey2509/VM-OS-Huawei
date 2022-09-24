@@ -1,7 +1,7 @@
 #include "Complex.hh"
 #include <iostream>
 #include <cmath>
-using namespace math;
+using namespace complex_math;
 
 const Complex z1 (1.3, 1.6);
 const Complex z2 (2.4, 2.5);
@@ -37,6 +37,18 @@ bool unaryMinusTest()
     Complex a = -z1;
 
     if ((a.re_ != -z1.re_) || (a.im_ != -z1.im_))
+    {
+        std::cout << "unary minus test failed" << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+bool unaryPlusTest()
+{
+    Complex a = +z1;
+    if (a != z1)
     {
         std::cout << "unary minus test failed" << std::endl;
         return false;
@@ -204,6 +216,7 @@ int main()
     return  equalTest() &&
             assignTest() &&
             unaryMinusTest() &&
+            unaryPlusTest() &&
             absTest() &&
             argTest() &&
             addTest() &&

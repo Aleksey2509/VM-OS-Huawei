@@ -3,9 +3,8 @@
 
 #include <iostream>
 
-namespace math
+namespace complex_math
 {
-
 
 struct Complex
 {
@@ -40,18 +39,20 @@ struct Complex
     Complex operator*(const Complex& rhs) const;
     Complex operator/(const Complex& rhs) const;
 
+    Complex operator*(double rhs);
+    Complex operator/(double rhs);
+
+    Complex operator+() const;
     Complex operator-() const;
 
 };
 
 
-Complex operator*(const Complex& lhs, double rhs);
 Complex operator*(double lhs, const Complex& rhs);
 Complex operator/(double lhs, const Complex& rhs);
-Complex operator/(const Complex& lhs, double rhs);
 
-} // namespace math
+} // namespace complex_math
 
-std::ostream& operator<<(std::ostream& ostream, const math::Complex& z);
+std::ostream& operator<<(std::ostream& ostream, const complex_math::Complex& z);
 
 #endif

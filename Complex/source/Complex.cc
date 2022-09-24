@@ -3,7 +3,7 @@
 #include <cstdlib>
 
 
-namespace math
+namespace complex_math
 {
 
 Complex::Complex(double re, double im) :
@@ -121,6 +121,11 @@ Complex Complex::operator+(const Complex& rhs) const
     return tmp;
 }
 
+Complex Complex::operator+() const
+{
+    return *this;
+}
+
 Complex Complex::operator-(const Complex& rhs) const
 {
     Complex tmp{*this};
@@ -142,9 +147,9 @@ Complex Complex::operator/(const Complex& rhs) const
     return tmp;
 }
 
-Complex operator*(const Complex& lhs, double rhs)
+Complex Complex::operator*(double rhs)
 {
-    Complex tmp{lhs};
+    Complex tmp{*this};
     tmp *= rhs;
     return tmp;
 }
@@ -163,25 +168,25 @@ Complex operator/(double lhs, const Complex& rhs)
     return tmp;
 }
 
-Complex operator/(const Complex& lhs, double rhs)
+Complex Complex::operator/(double rhs)
 {
-    Complex tmp{lhs};
+    Complex tmp{*this};
     tmp /= rhs;
     return tmp;
 }
 
-} // namespace math
+} // namespace complex_math
 
-std::ostream& operator<<(std::ostream& ostream, const math::Complex& z)
+std::ostream& operator<<(std::ostream& ostream, const complex_math::Complex& z)
 {
-    if (fabs(z.re_) >= math::Complex::COMPARE_ERROR)
+    if (fabs(z.re_) >= complex_math::Complex::COMPARE_ERROR)
         ostream << z.re_;
 
     ostream << " ";
-    if (z.im_ >= math::Complex::COMPARE_ERROR)
+    if (z.im_ >= complex_math::Complex::COMPARE_ERROR)
         ostream << "+ ";
 
-    if (fabs(z.im_) >= math::Complex::COMPARE_ERROR)
+    if (fabs(z.im_) >= complex_math::Complex::COMPARE_ERROR)
         ostream << z.im_ << "i";
     return ostream;
 }
