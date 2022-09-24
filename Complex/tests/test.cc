@@ -36,7 +36,7 @@ bool unaryMinusTest()
 {
     Complex a = -z1;
 
-    if ((a.re_ != -z1.re_) || (a.im_ != -z1.im_))
+    if ((a.re != -z1.re) || (a.im != -z1.im))
     {
         std::cout << "unary minus test failed" << std::endl;
         return false;

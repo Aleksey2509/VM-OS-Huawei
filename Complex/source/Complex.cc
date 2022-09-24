@@ -6,17 +6,17 @@
 namespace complex_math
 {
 
-Complex::Complex(double re, double im) :
-    re_(re), im_(im)
+Complex::Complex(double real, double imag) :
+    re(real), im(imag)
     {}
 
 Complex::Complex(const Complex& another) :
-    re_(another.re_), im_(another.im_)
+    re(another.re), im(another.im)
     {}
 
 double Complex::abs() const
 {
-    return sqrt(re_ * re_ + im_ * im_);
+    return sqrt(re * re + im * im);
 }
 
 double Complex::arg() const
@@ -24,15 +24,15 @@ double Complex::arg() const
     if (abs() == 0)
         return 0.0;
 
-    if (re_ == 0)
+    if (re == 0)
         return M_PI_2;
 
-    return atan(im_/re_);
+    return atan(im/re);
 }
 
 bool Complex::operator==(const Complex& rhs) const
 {
-    return (fabs(re_ - rhs.re_) <= COMPARE_ERROR) && (fabs(im_ - rhs.im_) <= COMPARE_ERROR);
+    return (fabs(re - rhs.re) <= COMPARE_ERROR) && (fabs(im - rhs.im) <= COMPARE_ERROR);
 }
 
 bool Complex::operator!=(const Complex& rhs) const
@@ -42,24 +42,24 @@ bool Complex::operator!=(const Complex& rhs) const
 
 Complex& Complex::operator=(const Complex rhs)
 {
-    re_ = rhs.re_;
-    im_ = rhs.im_;
+    re = rhs.re;
+    im = rhs.im;
 
     return *this;
 }
 
 Complex& Complex::operator+=(const Complex& rhs)
 {
-    re_ += rhs.re_;
-    im_ += rhs.im_;
+    re += rhs.re;
+    im += rhs.im;
 
     return *this;
 }
 
 Complex& Complex::operator-=(const Complex& rhs)
 {
-    re_ -= rhs.re_;
-    im_ -= rhs.im_;
+    re -= rhs.re;
+    im -= rhs.im;
 
     return *this;
 }
@@ -67,8 +67,8 @@ Complex& Complex::operator-=(const Complex& rhs)
 Complex& Complex::operator*=(const Complex& rhs)
 {
     Complex tmp{*this};
-    re_ = tmp.re_ * rhs.re_ - tmp.im_ * rhs.im_;
-    im_ = tmp.re_ * rhs.im_ + tmp.im_ * rhs.re_;
+    re = tmp.re * rhs.re - tmp.im * rhs.im;
+    im = tmp.re * rhs.im + tmp.im * rhs.re;
 
     return *this;
 }
@@ -76,35 +76,35 @@ Complex& Complex::operator*=(const Complex& rhs)
 Complex& Complex::operator/=(const Complex& rhs)
 {
     Complex tmp{*this};
-    re_ = (tmp.re_ * rhs.re_ + tmp.im_ * rhs.im_) / (rhs.abs() * rhs.abs());
-    im_ = (tmp.im_ * rhs.re_ - tmp.re_ * rhs.im_) / (rhs.abs() * rhs.abs());
+    re = (tmp.re * rhs.re + tmp.im * rhs.im) / (rhs.abs() * rhs.abs());
+    im = (tmp.im * rhs.re - tmp.re * rhs.im) / (rhs.abs() * rhs.abs());
 
     return *this;
 }
 
 Complex& Complex::operator+=(double rhs)
 {
-    re_ += rhs;
+    re += rhs;
     return *this;
 }
 Complex& Complex::operator-=(double rhs)
 {
-    re_ -= rhs;
+    re -= rhs;
     return *this;
 }
 
 Complex& Complex::operator*=(double rhs)
 {
-    re_ *= rhs;
-    im_ *= rhs;
+    re *= rhs;
+    im *= rhs;
 
     return *this;
 }
 
 Complex& Complex::operator/=(double rhs)
 {
-    re_ /= rhs;
-    im_ /= rhs;
+    re /= rhs;
+    im /= rhs;
 
     return *this;
 }
@@ -179,14 +179,14 @@ Complex Complex::operator/(double rhs)
 
 std::ostream& operator<<(std::ostream& ostream, const complex_math::Complex& z)
 {
-    if (fabs(z.re_) >= complex_math::Complex::COMPARE_ERROR)
-        ostream << z.re_;
+    if (fabs(z.re) >= complex_math::Complex::COMPARE_ERROR)
+        ostream << z.re;
 
     ostream << " ";
-    if (z.im_ >= complex_math::Complex::COMPARE_ERROR)
+    if (z.im >= complex_math::Complex::COMPARE_ERROR)
         ostream << "+ ";
 
-    if (fabs(z.im_) >= complex_math::Complex::COMPARE_ERROR)
-        ostream << z.im_ << "i";
+    if (fabs(z.im) >= complex_math::Complex::COMPARE_ERROR)
+        ostream << z.im << "i";
     return ostream;
 }

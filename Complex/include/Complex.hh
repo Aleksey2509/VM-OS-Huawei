@@ -10,8 +10,8 @@ struct Complex
 {
     constexpr static double COMPARE_ERROR = 0.000001;
 
-    double re_ = 0.0;
-    double im_ = 0.0;
+    double re = 0.0;
+    double im = 0.0;
 
     Complex();
     Complex(double re, double im);
