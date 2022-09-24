@@ -3,9 +3,6 @@
 #include <cmath>
 using namespace complex_math;
 
-const Complex z1 (1.3, 1.6);
-const Complex z2 (2.4, 2.5);
-
 bool equalTest()
 {
     Complex a{1.0, 1.0};
@@ -22,6 +19,7 @@ bool equalTest()
 
 bool assignTest()
 {
+    const Complex z1 (1.3, 1.6);
     Complex a = z1;
     if (!(a == z1))
     {
@@ -34,6 +32,7 @@ bool assignTest()
 
 bool unaryMinusTest()
 {
+    const Complex z1 (1.3, 1.6);
     Complex a = -z1;
 
     if ((a.re != -z1.re) || (a.im != -z1.im))
@@ -47,6 +46,7 @@ bool unaryMinusTest()
 
 bool unaryPlusTest()
 {
+    const Complex z1 (1.3, 1.6);
     Complex a = +z1;
     if (a != z1)
     {
@@ -59,6 +59,9 @@ bool unaryPlusTest()
 
 bool absTest()
 {
+    const Complex z1 (1.3, 1.6);
+    const Complex z2 (2.4, 2.5);
+
     double expectedFirstAbs = 2.061553;
     double expectedSecondAbs = 3.465545;
 
@@ -75,6 +78,9 @@ bool absTest()
 
 bool argTest()
 {
+    const Complex z1 (1.3, 1.6);
+    const Complex z2 (2.4, 2.5);
+
     double expectedFirstArg = 0.88848;
     double expectedSecondArg = 0.805803;
 
@@ -91,6 +97,9 @@ bool argTest()
 
 bool addTest()
 {
+    const Complex z1 (1.3, 1.6);
+    const Complex z2 (2.4, 2.5);
+
     Complex expectedResult (3.7, 4.1);
 
     Complex result = z1 + z2;
@@ -106,6 +115,9 @@ bool addTest()
 
 bool subTest()
 {
+    const Complex z1 (1.3, 1.6);
+    const Complex z2 (2.4, 2.5);
+
     Complex expectedResult (1.1, 0.9);
     Complex result = z2 - z1;
 
@@ -121,6 +133,9 @@ bool subTest()
 
 bool mulTest()
 {
+    const Complex z1 (1.3, 1.6);
+    const Complex z2 (2.4, 2.5);
+
     Complex expectedResult (-0.88, 7.09);
     Complex result = z2 * z1;
 
@@ -136,6 +151,8 @@ bool mulTest()
 
 bool divTest()
 {
+    const Complex z1 (1.3, 1.6);
+    const Complex z2 (2.4, 2.5);
     Complex expectedResult (0.592839, 0.0491257);
     Complex result = z1 / z2;
     if (result != expectedResult)
@@ -150,6 +167,9 @@ bool divTest()
 
 bool addEqTest()
 {
+    const Complex z1 (1.3, 1.6);
+    const Complex z2 (2.4, 2.5);
+
     Complex expectedResult (3.7, 4.1);
     Complex result = z1;
     result += z2;
@@ -165,6 +185,9 @@ bool addEqTest()
 
 bool subEqTest()
 {
+    const Complex z1 (1.3, 1.6);
+    const Complex z2 (2.4, 2.5);
+
     Complex expectedResult (1.1, 0.9);
     Complex result = z2;
     result -= z1;
@@ -181,6 +204,9 @@ bool subEqTest()
 
 bool mulEqTest()
 {
+    const Complex z1 (1.3, 1.6);
+    const Complex z2 (2.4, 2.5);
+
     Complex expectedResult (-0.88, 7.09);
     Complex result = z2;
     result *= z1;
@@ -197,6 +223,9 @@ bool mulEqTest()
 
 bool divEqTest()
 {
+    const Complex z1 (1.3, 1.6);
+    const Complex z2 (2.4, 2.5);
+
     Complex expectedResult (0.592839, 0.0491257);
     Complex result = z1;
     result /= z2;
