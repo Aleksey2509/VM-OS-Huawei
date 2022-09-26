@@ -2,4 +2,4 @@
 
 ## Task Formulation
 
-Implement a template stack and memory-saving stack<bool> specialization
+Implement a template stack and memory-saving bool specialization
