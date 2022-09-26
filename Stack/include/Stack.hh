@@ -5,6 +5,8 @@
 #include <climits>
 #include <cmath>
 #include <utility>
+#include <iostream>
+#include <bitset>
 
 namespace custom_containers
 {
@@ -30,6 +32,8 @@ public:
 
     bool operator==(const Stack& other) const;
     bool operator!=(const Stack& other) const;
+
+    void print();
 
     ~Stack();
 
@@ -64,6 +68,8 @@ public:
 
     bool operator==(const Stack& other) const;
     bool operator!=(const Stack& other) const;
+
+    void print();
 
     ~Stack();
 
@@ -212,6 +218,15 @@ bool Stack<T>::operator!=(const Stack& other) const
 }
 
 template <typename T>
+void Stack<T>::print()
+{
+    for (auto it = data_; it != data_ + size_; ++it)
+        std::cout << *it << " ";
+
+    std::cout << std::endl;
+}
+
+template <typename T>
 Stack<T>::~Stack()
 {
     delete[] data_;
@@ -266,7 +281,11 @@ void Stack<bool>::push(bool elem)
         capacity_ = 2 * getActualCapacity() * CHAR_BIT;
     }
 
-    data_[size_ / CHAR_BIT] |= (elem << (CHAR_BIT - 1)) >> (size_ % CHAR_BIT);
+    if (elem == true)
+        data_[size_ / CHAR_BIT] |= (elem << (CHAR_BIT - 1)) >> (size_ % CHAR_BIT);
+    else
+        data_[size_ / CHAR_BIT] &= ~((elem << (CHAR_BIT - 1)) >> (size_ % CHAR_BIT));
+
     size_++;
 
 }
@@ -353,6 +372,13 @@ bool Stack<bool>::operator!=(const Stack& other) const
     return !((*this) == other);
 }
 
+void Stack<bool>::print()
+{
+    for (auto it = data_; it != data_ + getActualSize(); ++it)
+        std::cout << std::bitset<CHAR_BIT>(*it) << " ";
+
+    std::cout << std::endl;
+}
 
 Stack<bool>::~Stack()
 {
