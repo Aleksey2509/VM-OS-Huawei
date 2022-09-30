@@ -1,12 +1,14 @@
+#ifndef STACK_HH
+#define STACK_HH
 
-#include <cstdlib>
 #include <algorithm>
-#include <memory>
+#include <bitset>
 #include <climits>
 #include <cmath>
-#include <utility>
+#include <cstdlib>
 #include <iostream>
-#include <bitset>
+#include <memory>
+#include <utility>
 
 namespace custom_containers
 {
@@ -23,7 +25,7 @@ public:
 
     void push(T elem);
     void pop();
-    bool isEmpty() const;
+    bool empty() const;
     size_t size() const;
     T& top();
 
@@ -37,8 +39,10 @@ public:
 
     ~Stack();
 
-private:
     static constexpr size_t DEFAULT_CAPACITY = 10;
+
+private:
+    static constexpr unsigned int EXPANSION_FACTOR = 2;
 
     size_t capacity_ = DEFAULT_CAPACITY;
     size_t size_ = 0;
@@ -59,7 +63,7 @@ public:
 
     void push(bool elem);
     void pop();
-    bool isEmpty() const;
+    bool empty() const;
     size_t size() const;
     bool top();
 
@@ -80,6 +84,7 @@ private:
     inline  size_t getActualCapacity() const;
     inline  size_t getActualSize() const;
 
+    static constexpr unsigned int EXPANSION_FACTOR = 2;
     size_t capacity_ = MIN_SIZE;
     size_t size_ = 0;
 
@@ -116,11 +121,9 @@ Stack<T>::Stack(const Stack& other)
 template <typename T>
 Stack<T>::Stack (Stack&& other)
 {
-    capacity_ = other.capacity_;
-    size_ = other.size_;
-    data_ = other.data_;
-
-    other.data_ = nullptr;
+    std::swap(data_, other.data_);
+    std::swap(capacity_, other.capacity_);
+    std::swap(size_, other.size_);
 }
 
 template <typename T>
@@ -128,11 +131,11 @@ void Stack<T>::push(T elem)
 {
     if (size_ == capacity_)
     {
-        T* tmpData = new T[2 * capacity_];
+        T* tmpData = new T[EXPANSION_FACTOR * capacity_];
         std::copy(data_, data_ + size_, tmpData);
         delete[] data_;
         data_ = tmpData;
-        capacity_ *= 2;
+        capacity_ *= EXPANSION_FACTOR;
     }
 
     data_[size_] = elem;
@@ -147,7 +150,7 @@ void Stack<T>::pop()
 }
 
 template <typename T>
-bool Stack<T>::isEmpty() const
+bool Stack<T>::empty() const
 {
     return size_ == 0;
 }
@@ -161,6 +164,9 @@ size_t Stack<T>::size() const
 template <typename T>
 T& Stack<T>::top()
 {
+    if (!size_) // top() called on empty stack is undefined, so anything can be returned
+        return false;
+
     return data_[size_ - 1];
 }
 
@@ -274,17 +280,17 @@ void Stack<bool>::push(bool elem)
 
     if (size_ == capacity_)
     {
-        unsigned char* tmpData = new unsigned char[2 * getActualCapacity()];
+        unsigned char* tmpData = new unsigned char[EXPANSION_FACTOR * getActualCapacity()];
         std::copy(data_, data_ + getActualCapacity(), tmpData);
         delete[] data_;
         data_ = tmpData;
-        capacity_ = 2 * getActualCapacity() * CHAR_BIT;
+        capacity_ = EXPANSION_FACTOR * getActualCapacity() * CHAR_BIT;
     }
 
-    if (elem == true)
-        data_[size_ / CHAR_BIT] |= (elem << (CHAR_BIT - 1)) >> (size_ % CHAR_BIT);
+    if (elem)
+        data_[size_ / CHAR_BIT] |= (1 << (CHAR_BIT - 1 - (size_ % CHAR_BIT))) ;
     else
-        data_[size_ / CHAR_BIT] &= ~((elem << (CHAR_BIT - 1)) >> (size_ % CHAR_BIT));
+        data_[size_ / CHAR_BIT] &= ~(1 << (CHAR_BIT - 1 - (size_ % CHAR_BIT)));
 
     size_++;
 
@@ -298,7 +304,7 @@ void Stack<bool>::pop()
 }
 
 
-bool Stack<bool>::isEmpty() const
+bool Stack<bool>::empty() const
 {
     return size_ == 0;
 }
@@ -312,7 +318,7 @@ size_t Stack<bool>::size() const
 
 bool Stack<bool>::top()
 {
-    if (size_ == 0) // top() called on empty stack causes undefined behaviour, so anything can be returned
+    if (size_ == 0) // top() called on empty stack is undefined, so anything can be returned
         return false;
 
     return data_[getActualSize() - 1] & ((1 << (CHAR_BIT - 1)) >> ((size_ - 1) % CHAR_BIT) );
@@ -357,9 +363,20 @@ bool Stack<bool>::operator==(const Stack& other) const
     unsigned char* otherIt = other.data_;
     unsigned char* itEnd = data_ + getActualSize();
 
-    for (; it != itEnd; ++it, ++otherIt)
+    for (; (it - 1) != itEnd; ++it, ++otherIt)
     {
         if (*it != *otherIt)
+            return false;
+    }
+
+    if (!(size_ % CHAR_BIT))
+    {
+        if (*it != *otherIt)
+            return false;
+    }
+    else
+    {
+        if ((*it & 0xFF << (CHAR_BIT - size_ % CHAR_BIT)) != *otherIt  )
             return false;
     }
 
@@ -396,3 +413,6 @@ inline size_t Stack<bool>::getActualSize() const
 }
 
 } // namespace custom_containers
+
+
+#endif
