@@ -288,9 +288,13 @@ void Stack<bool>::push(bool elem)
     }
 
     if (elem)
-        data_[size_ / CHAR_BIT] |= (1 << (CHAR_BIT - 1 - (size_ % CHAR_BIT))) ;
+    {
+        data_[size_ / CHAR_BIT] |= (elem << (size_ % CHAR_BIT));
+    }
     else
-        data_[size_ / CHAR_BIT] &= ~(1 << (CHAR_BIT - 1 - (size_ % CHAR_BIT)));
+    {
+        data_[size_ / CHAR_BIT] &= ~(elem << (size_ % CHAR_BIT));
+    }
 
     size_++;
 
@@ -321,7 +325,7 @@ bool Stack<bool>::top()
     if (size_ == 0) // top() called on empty stack is undefined, so anything can be returned
         return false;
 
-    return data_[getActualSize() - 1] & ((1 << (CHAR_BIT - 1)) >> ((size_ - 1) % CHAR_BIT) );
+    return data_[getActualSize() - 1] & (1 << (((size_ - 1) % CHAR_BIT)));
 }
 
 
@@ -376,7 +380,7 @@ bool Stack<bool>::operator==(const Stack& other) const
     }
     else
     {
-        if ((*it & 0xFF << (CHAR_BIT - size_ % CHAR_BIT)) != *otherIt  )
+        if ((*it & (0xFF >> (CHAR_BIT - size_ % CHAR_BIT))) != (*otherIt & (0xFF >> (CHAR_BIT - size_ % CHAR_BIT))) )
             return false;
     }
 
