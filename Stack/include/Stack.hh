@@ -5,10 +5,7 @@
 #include <bitset>
 #include <climits>
 #include <cmath>
-#include <cstdlib>
 #include <iostream>
-#include <memory>
-#include <utility>
 
 namespace custom_containers
 {
@@ -35,7 +32,6 @@ public:
     bool operator==(const Stack& other) const;
     bool operator!=(const Stack& other) const;
 
-    void print();
 
     ~Stack();
 
@@ -48,6 +44,7 @@ private:
     size_t size_ = 0;
 
     T* data_ = nullptr;
+    void print();
 };
 
 
@@ -73,7 +70,6 @@ public:
     bool operator==(const Stack& other) const;
     bool operator!=(const Stack& other) const;
 
-    void print();
 
     ~Stack();
 
@@ -89,6 +85,7 @@ private:
     size_t size_ = 0;
 
     unsigned char* data_ = nullptr;
+    void print();
 };
 
 } // namespace custom_containers

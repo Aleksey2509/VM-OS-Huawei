@@ -16,7 +16,9 @@ if (TIDY_ENABLED)
 set(CMAKE_CXX_CLANG_TIDY
     clang-tidy;
     --format-style=file;
-    --header-filter=.*;)
+    --header-filter=.*;
+    )
+    message(STATUS "clang-tidy ON")
 
 endif()
 
@@ -31,6 +33,8 @@ if (FORMAT_ENABLED)
             -i
             ${ALL_SOURCE_FILES}
         )
+        message(STATUS "clang-format ON")
+
 endif()
 
 set(STACK_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/include)
