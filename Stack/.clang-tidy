@@ -3,6 +3,7 @@ Checks: >
   -*,
   bugprone-*,
   google-*,
+  llvm-*,
   misc-*,
   modernize-*,
   performance-*,
@@ -11,13 +12,11 @@ Checks: >
   -google-readability-braces-around-statements,
   -google-readability-namespace-comments,
   -google-runtime-references,
-  -llvm-include-*
-  -llvmlibc-restrict-system-libc-headers
+  -llvm-include-order,
   -misc-non-private-member-variables-in-classes,
   -modernize-return-braced-init-list,
   -modernize-use-trailing-return-type,
   -modernize-use-nodiscard,
-  -misc-non-private-member-variables-in-classes,
   -modernize-avoid-c-arrays,
   -performance-move-const-arg,
   -readability-braces-around-statements,
@@ -25,13 +24,14 @@ Checks: >
   -readability-named-parameter,
   -readability-redundant-declaration,
   -readability-function-cognitive-complexity,
-  -readability-implicit-bool-conversion
-  -bugprone-narrowing-conversions,
-  -performance-noexcept-*,
-  -misc-definitions-in-headers
-WarningsAsErrors: "*"
+  -readability-implicit-bool-conversion,
+  -bugprone-narrowing-conversions
 
-  CheckOptions:
+
+WarningsAsErrors: "*"
+AnalyzeTemporaryDtors: false
+User: alexey
+CheckOptions:
   - key: google-readability-braces-around-statements.ShortStatementLines
     value: "1"
   - key: google-readability-function-size.StatementThreshold
@@ -63,7 +63,7 @@ WarningsAsErrors: "*"
   - key: readability-identifier-naming.ClassConstantCase
     value: UPPER_CASE
   - key: readability-identifier-naming.ClassMemberCase
-    value: lowerCamelCase
+    value: lower_case
   - key: readability-identifier-naming.ClassMemberSuffix
     value: _
   - key: readability-identifier-naming.ClassMethodCase
@@ -71,17 +71,17 @@ WarningsAsErrors: "*"
   - key: readability-identifier-naming.ConstantCase
     value: UPPER_CASE
   - key: readability-identifier-naming.ConstantMemberCase
-    value: lowerCamelCase
+    value: lower_case
   - key: readability-identifier-naming.ConstantMemberSuffix
-    value: ""
+    value: _
   - key: readability-identifier-naming.ConstantParameterCase
-    value: lowerCamelCase
+    value: lower_case
   - key: readability-identifier-naming.ConstantPointerParameterCase
-    value: lowerCamelCase
+    value: lower_case
   - key: readability-identifier-naming.ConstexprFunctionCase
-    value: lowerCamelCase
+    value: CamelCase
   - key: readability-identifier-naming.ConstexprMethodCase
-    value: lowerCamelCase
+    value: CamelCase
   - key: readability-identifier-naming.ConstexprVariableCase
     value: UPPER_CASE
   - key: readability-identifier-naming.EnumCase
@@ -89,49 +89,63 @@ WarningsAsErrors: "*"
   - key: readability-identifier-naming.EnumConstantCase
     value: UPPER_CASE
   - key: readability-identifier-naming.FunctionCase
-    value: lowerCamelCase
+    value: CamelCase
   - key: readability-identifier-naming.GlobalConstantCase
     value: UPPER_CASE
   - key: readability-identifier-naming.GlobalConstantPointerCase
     value: UPPER_CASE
   - key: readability-identifier-naming.GlobalFunctionCase
-    value: lowerCamelCase
+    value: CamelCase
   - key: readability-identifier-naming.GlobalPointerCase
     value: UPPER_CASE
   - key: readability-identifier-naming.GlobalVariableCase
     value: UPPER_CASE
   - key: readability-identifier-naming.InlineNamespaceCase
     value: lower_case
+  - key: readability-identifier-naming.LocalConstantCase
+    value: lower_case
+  - key: readability-identifier-naming.LocalConstantPointerCase
+    value: lower_case
+  - key: readability-identifier-naming.LocalPointerCase
+    value: lower_case
+  - key: readability-identifier-naming.LocalVariableCase
+    value: lower_case
+  - key: readability-identifier-naming.MemberCase
+    value: lower_case
+  - key: readability-identifier-naming.MemberSuffix
+    value: _
+  - key: readability-identifier-naming.MethodCase
+    value: CamelCase
   - key: readability-identifier-naming.NamespaceCase
     value: lower_case
   - key: readability-identifier-naming.ParameterCase
-    value: lowerCamelCase
+    value: lower_case
   - key: readability-identifier-naming.ParameterPackCase
-    value: lowerCamelCase
+    value: lower_case
   - key: readability-identifier-naming.PointerParameterCase
-    value: lowerCamelCase
+    value: lower_case
   - key: readability-identifier-naming.PrivateMemberCase
-    value: lowerCamelCase
+    value: lower_case
   - key: readability-identifier-naming.PrivateMemberSuffix
     value: _
   - key: readability-identifier-naming.PrivateMethodCase
-    value: lowerCamelCase
+    value: CamelCase
   - key: readability-identifier-naming.ProtectedMemberCase
-    value: lowerCamelCase
+    value: lower_case
   - key: readability-identifier-naming.ProtectedMemberSuffix
     value: _
   - key: readability-identifier-naming.ProtectedMethodCase
-    value: lowerCamelCase
+    value: CamelCase
   - key: readability-identifier-naming.PublicMemberCase
-    value: lowerCamelCase
+    value: lower_case
   - key: readability-identifier-naming.PublicMemberSuffix
     value: ""
   - key: readability-identifier-naming.PublicMethodCase
-    value: lowerCamelCase
+    value: CamelCase
   - key: readability-identifier-naming.StaticConstantCase
     value: UPPER_CASE
   - key: readability-identifier-naming.StaticVariableCase
-    value: lowerCamelCase
+    value: lower_case
   - key: readability-identifier-naming.StructCase
     value: CamelCase
   - key: readability-identifier-naming.TemplateParameterCase
@@ -149,10 +163,6 @@ WarningsAsErrors: "*"
   - key: readability-identifier-naming.ValueTemplateParameterCase
     value: UPPER_CASE
   - key: readability-identifier-naming.VariableCase
-    value: lowerCamelCase
+    value: lower_case
   - key: readability-identifier-naming.VirtualMethodCase
     value: CamelCase
-  - key: readability-implicit-bool-conversion.AllowIntegerConditions
-    value: 1   
-  - key: readability-implicit-bool-conversion.AllowPointerConditions
-    value: 1
