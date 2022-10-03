@@ -48,11 +48,11 @@ void Stack<bool>::Push(bool elem)
 
     if (elem)
     {
-        data_[size_ / CHAR_BIT] |= (elem << (size_ % CHAR_BIT));
+        data_[size_ / CHAR_BIT] |= static_cast<unsigned char>(1 << (size_ % CHAR_BIT));
     }
     else
     {
-        data_[size_ / CHAR_BIT] &= ~(elem << (size_ % CHAR_BIT));
+        data_[size_ / CHAR_BIT] &= ~static_cast<unsigned char>(1 << (size_ % CHAR_BIT));
     }
 
     size_++;
@@ -116,14 +116,17 @@ Stack<bool>& Stack<bool>::operator=(Stack&& other) noexcept
 
 bool Stack<bool>::operator==(const Stack& other) const
 {
-    if ((size_ != other.size_) || (capacity_ != other.capacity_))
+    if (size_ != other.size_)
         return false;
+
+    if (Empty())
+        return true;
 
     unsigned char* iter = data_;
     unsigned char* other_it = other.data_;
     unsigned char* it_end = data_ + GetActualSize();
 
-    for (; (iter - 1) != it_end; ++iter, ++other_it)
+    for (; iter != (it_end - 1); ++iter, ++other_it)
     {
         if (*iter != *other_it)
             return false;
@@ -152,7 +155,7 @@ bool Stack<bool>::operator!=(const Stack& other) const
 void Stack<bool>::Print()
 {
     for (auto* it = data_; it != data_ + GetActualSize(); ++it)
-        std::cout << std::bitset<CHAR_BIT>(*it) << " ";
+        std::cout << std::bitset<CHAR_BIT>(*it) << " = " << static_cast<int>(*it) << " ";
 
     std::cout << std::endl;
 }

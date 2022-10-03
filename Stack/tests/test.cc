@@ -121,7 +121,7 @@ TEST(StackBool, TopFuncTest)
 {
     Stack<bool> test(8);
 
-    for (int i = 0; i < 7; i++)
+     for (int i = 0; i < 7; i++)
         test.Push(true);
 
     EXPECT_EQ(test.Top(), true);
@@ -130,19 +130,4 @@ TEST(StackBool, TopFuncTest)
 
     EXPECT_EQ(test.Top(), false);
 
-    // test.Push(false);
-
-    // EXPECT_EQ(test.top(), false);
-    // EXPECT_EQ(test.size(), 8);
-
-    // test.Push(false);
-    // test.Push(false);
-    // test.Push(true);
-    // test.Push(true);
-    // test.Push(false);
-    // test.Push(true);
-    // test.Push(true);
-    // test.Push(true);
-
-    // EXPECT_EQ(test.top(), true);
 }
