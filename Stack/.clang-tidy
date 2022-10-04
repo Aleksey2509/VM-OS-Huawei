@@ -10,8 +10,8 @@ Checks: >
   portability-*,
   readability-*,
   -google-readability-braces-around-statements,
-  -google-readability-namespace-comments,
   -google-runtime-references,
+  -google-runtime-int,
   -llvm-include-order,
   -misc-non-private-member-variables-in-classes,
   -modernize-return-braced-init-list,
@@ -21,11 +21,7 @@ Checks: >
   -performance-move-const-arg,
   -readability-braces-around-statements,
   -readability-magic-numbers,
-  -readability-named-parameter,
-  -readability-redundant-declaration,
-  -readability-function-cognitive-complexity,
   -readability-implicit-bool-conversion,
-  -bugprone-narrowing-conversions
 
 
 WarningsAsErrors: "*"
