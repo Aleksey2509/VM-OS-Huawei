@@ -25,6 +25,7 @@ public:
     void Pop();
     bool Empty() const;
     size_t Size() const;
+    size_t Capacity() const;
     T& Top();
 
     Stack& operator=(const Stack& other);
@@ -39,8 +40,8 @@ public:
 
     static constexpr size_t START_SIZE = 10;
 
-private:
     static constexpr unsigned int EXPANSION_FACTOR = 2;
+private:
     size_t capacity_ = START_SIZE;
 
     size_t size_ = 0;
@@ -64,6 +65,7 @@ public:
     void Pop();
     bool Empty() const;
     size_t Size() const;
+    size_t Capacity() const;
     bool Top();
 
     Stack& operator=(const Stack& other);
@@ -77,12 +79,12 @@ public:
 
     static constexpr size_t START_SIZE = CHAR_BIT;
 
+    static constexpr unsigned int EXPANSION_FACTOR = 2;
 private:
 
     inline  size_t GetActualCapacity() const;
     inline  size_t GetActualSize() const;
 
-    static constexpr unsigned int EXPANSION_FACTOR = 2;
     size_t capacity_ = START_SIZE;
     size_t size_ = 0;
 
@@ -151,6 +153,12 @@ template <typename T>
 size_t Stack<T>::Size() const
 {
     return size_;
+}
+
+template <typename T>
+size_t Stack<T>::Capacity() const
+{
+    return capacity_;
 }
 
 template <typename T>

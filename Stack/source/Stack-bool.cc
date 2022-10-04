@@ -4,8 +4,6 @@
 namespace custom_containers
 {
 
-// Stack <bool> implementation
-
 Stack<bool>::Stack() : data_(new unsigned char[static_cast<size_t>(std::ceil(static_cast<double>(capacity_) / CHAR_BIT))])
 { }
 
@@ -78,6 +76,10 @@ size_t Stack<bool>::Size() const
     return size_;
 }
 
+size_t Stack<bool>::Capacity() const
+{
+    return capacity_;
+}
 
 bool Stack<bool>::Top()
 {
