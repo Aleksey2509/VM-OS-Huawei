@@ -2,95 +2,223 @@
 
 #include "Stack.hh"
 #include <vector>
+#include <numeric>
+
+
 
 template <typename T>
 using Stack = custom_containers::Stack<T>;
 
-TEST(StackT, ConstructTest)
+template <typename T>
+class StackFixture : public ::testing::Test
 {
-    Stack<int> test(10);
-    test.Push(15);
-    test.Push(9);
-    test.Push(8);
+public:
+    custom_containers::Stack<T> first_stk;
+    custom_containers::Stack<T> second_stk;
 
-    EXPECT_EQ(test.Size(), 3);
+    using ValueType = T;
+
+    std::vector<T> values {T{-10}, T{12}, T{20}, T{0}, T{-5}, T{14}};
+
+};
+
+using TestedTypes = ::testing::Types<char, short int, int, long int, float, double>;
+
+TYPED_TEST_SUITE(StackFixture, TestedTypes);
+
+TYPED_TEST(StackFixture, DefaultConstructTest)
+{
+    EXPECT_EQ(this->first_stk.Size(), 0);
+    EXPECT_EQ(this->second_stk.Size(), 0);
 }
 
-TEST(StackT, EqualityTest)
+TYPED_TEST(StackFixture, EqualityTest)
 {
-    Stack<int> test1(8);
-    test1.Push(2);
-    test1.Push(3);
-    test1.Push(5);
+    for (const auto& iter : this->values)
+    {
+        this->first_stk.Push(iter);
+        this->second_stk.Push(iter);
+    }
 
-    Stack<int> test2(8);
-    test2.Push(2);
-    test2.Push(3);
-    test2.Push(5);
+    EXPECT_EQ(this->first_stk, this->second_stk);
+}
 
-    EXPECT_EQ(test1 == test2, true);
+TYPED_TEST(StackFixture, CopyConstructTest)
+{
+    for (const auto& iter : this->values)
+    {
+        this->first_stk.Push(iter);
+    }
 
+    using TestedType  = typename TestFixture::ValueType;
+
+    custom_containers::Stack<TestedType> to_copy_to{this->first_stk};
+
+    EXPECT_EQ(to_copy_to, this->first_stk);
+}
+
+TYPED_TEST(StackFixture, MoveConstructTest)
+{
+    for (const auto& iter : this->values)
+    {
+        this->first_stk.Push(iter);
+        this->second_stk.Push(iter);
+    }
+
+    using TestedType  = typename TestFixture::ValueType;
+
+    custom_containers::Stack<TestedType> to_move_to{std::move(this->first_stk)};
+
+    EXPECT_EQ(to_move_to, this->second_stk);
 }
 
 
-TEST(StackT, CopyConstructTest)
+
+
+TYPED_TEST(StackFixture, CopyAssignTest)
 {
-    Stack<float> test(10);
-    test.Push(15);
-    test.Push(9);
-    test.Push(8);
+    for (const auto& iter : this->values)
+    {
+        this->first_stk.Push(iter);
+    }
 
-    Stack<float> test_copy{test};
+    this->second_stk = this->first_stk;
 
-    EXPECT_EQ(test == test_copy, true);
+    EXPECT_EQ(this->second_stk, this->first_stk);
+}
 
+TYPED_TEST(StackFixture, MoveAssignTest)
+{
+    for (const auto& iter : this->values)
+    {
+        this->first_stk.Push(iter);
+        this->second_stk.Push(iter);
+    }
+
+    using TestedType  = typename TestFixture::ValueType;
+
+    custom_containers::Stack<TestedType> to_move_to{};
+
+    to_move_to = std::move(this->second_stk);
+
+    EXPECT_EQ(to_move_to, this->first_stk);
+}
+
+
+
+TYPED_TEST(StackFixture, SizeTest)
+{
+    for (const auto& iter : this->values)
+    {
+        this->first_stk.Push(iter);
+    }
+
+    size_t stk_size = this->first_stk.Size();
+    size_t expected_size = this->values.size();
+
+    EXPECT_EQ(stk_size, expected_size);
+    
+}
+
+TYPED_TEST(StackFixture, EmptyTest)
+{
+    EXPECT_EQ(this->first_stk.Empty(), true);
+}
+
+
+TYPED_TEST(StackFixture, PushPopTop)
+{
+    for (const auto& iter : this->values)
+    {
+        this->first_stk.Push(iter);
+    }
+
+    EXPECT_EQ(this->first_stk.Top(), this->values[this->values.size() - 1]);
+    EXPECT_EQ(this->first_stk.Size(), this->values.size());
+
+    this->first_stk.Pop();
+    this->first_stk.Pop();
+
+    EXPECT_EQ(this->first_stk.Top(), this->values[this->values.size() - 3]);
+    EXPECT_EQ(this->first_stk.Size(), this->values.size() - 2);
 }
 
 TEST(StackBool, EqualityTest)
 {
-    Stack<bool> test1(8);
-    test1.Push(true);
-    test1.Push(true);
-    test1.Push(false);
+    Stack<bool> first_stk(8);
+    first_stk.Push(true);
+    first_stk.Push(true);
+    first_stk.Push(false);
 
-    Stack<bool> test2(8);
-    test2.Push(true);
-    test2.Push(true);
-    test2.Push(false);
+    Stack<bool> second_stk(8);
+    second_stk.Push(true);
+    second_stk.Push(true);
+    second_stk.Push(false);
 
-    EXPECT_EQ(test1 == test2, true);
+    EXPECT_EQ(first_stk == second_stk, true);
 
 }
 
 TEST(StackBool, CopyConstructTest)
 {
-    Stack<bool> test(10);
-    test.Push(true);
-    test.Push(true);
-    test.Push(false);
+    Stack<bool> first_stk(10);
+    first_stk.Push(true);
+    first_stk.Push(true);
+    first_stk.Push(false);
 
-    Stack<bool> test_copy{test};
+    Stack<bool> second_stk{first_stk};
 
-    EXPECT_EQ(test == test_copy, true);
+    EXPECT_EQ(first_stk == second_stk, true);
 
 }
 
 TEST(StackBool, MoveConstructTest)
 {
-    Stack<bool> test(10);
-    test.Push(true);
-    test.Push(true);
-    test.Push(false);
+    Stack<bool> first_stk(10);
+    first_stk.Push(true);
+    first_stk.Push(true);
+    first_stk.Push(false);
 
-    Stack<bool> test_copy{test};
+    Stack<bool> second_stk{first_stk};
 
-    Stack<bool> test_move{test};
+    Stack<bool> test_move{std::move(first_stk)};
 
-    EXPECT_EQ(test_move == test_copy, true);
+    EXPECT_EQ(test_move == second_stk, true);
 
 }
 
-TEST(StackBool, EmptyFuncTest)
+
+TEST(StackBool, CopyAssignTest)
+{
+    Stack<bool> first_stk(10);
+    first_stk.Push(true);
+    first_stk.Push(true);
+    first_stk.Push(false);
+    Stack<bool> test_copy;
+    test_copy = first_stk;
+
+
+    EXPECT_EQ(first_stk == test_copy, true);
+
+}
+
+TEST(StackBool, MoveAssignTest)
+{
+    Stack<bool> first_stk(10);
+    first_stk.Push(true);
+    first_stk.Push(true);
+    first_stk.Push(false);
+
+    Stack<bool> second_stk{first_stk};
+
+    Stack<bool> test_move;
+    test_move = std::move(first_stk);
+
+    EXPECT_EQ(test_move == second_stk, true);
+
+}
+
+TEST(StackBool, EmptyTest)
 {
     Stack<bool> test(0);
 
@@ -102,7 +230,7 @@ TEST(StackBool, EmptyFuncTest)
     EXPECT_EQ(test.Empty(), false);
 }
 
-TEST(StackBool, SizeFuncTest)
+TEST(StackBool, SizeTest)
 {
     Stack<bool> test(0);
 
@@ -117,7 +245,7 @@ TEST(StackBool, SizeFuncTest)
     EXPECT_EQ(test.Size(), 8);
 }
 
-TEST(StackBool, TopFuncTest)
+TEST(StackBool, TopTest)
 {
     Stack<bool> test(8);
 
