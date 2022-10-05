@@ -18,11 +18,12 @@ public:
 
     using ValueType = T;
 
-    std::vector<T> values {T{-10}, T{12}, T{20}, T{0}, T{-5}, T{14}};
+    std::vector<T> values {static_cast<T>(-10), static_cast<T>(0), static_cast<T>(20),
+                           static_cast<T>(0), static_cast<T>(0), static_cast<T>(14)};
 
 };
 
-using TestedTypes = ::testing::Types<char, short int, int, long int, float, double>;
+using TestedTypes = ::testing::Types<bool, char, short int, int, long int, float, double>;
 
 TYPED_TEST_SUITE(StackFixture, TestedTypes);
 
