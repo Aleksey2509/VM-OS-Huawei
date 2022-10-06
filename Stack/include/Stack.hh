@@ -34,8 +34,6 @@ public:
     bool operator==(const Stack& other) const;
     bool operator!=(const Stack& other) const;
 
-    
-
     ~Stack();
 
     static constexpr size_t START_SIZE = 10;
@@ -47,7 +45,6 @@ private:
     size_t size_ = 0;
 
     T* data_ = nullptr;
-    void Print();
 };
 
 
@@ -89,7 +86,6 @@ private:
     size_t size_ = 0;
 
     unsigned char* data_ = nullptr;
-    void Print();
 };
 
 
@@ -218,15 +214,6 @@ template <typename T>
 bool Stack<T>::operator!=(const Stack& other) const
 {
     return !((*this) == other);
-}
-
-template <typename T>
-void Stack<T>::Print()
-{
-    for (auto it = data_; it != data_ + size_; ++it)
-        std::cout << *it << " ";
-
-    std::cout << std::endl;
 }
 
 template <typename T>

@@ -154,14 +154,6 @@ bool Stack<bool>::operator!=(const Stack& other) const
     return !((*this) == other);
 }
 
-void Stack<bool>::Print()
-{
-    for (auto* it = data_; it != data_ + GetActualSize(); ++it)
-        std::cout << std::bitset<CHAR_BIT>(*it) << " = " << static_cast<int>(*it) << " ";
-
-    std::cout << std::endl;
-}
-
 Stack<bool>::~Stack()
 {
     delete[] data_;

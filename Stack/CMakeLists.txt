@@ -1,7 +1,7 @@
 #Minimum cmake version
 cmake_minimum_required(VERSION 3.11)
 #Project info
-project(stack VERSION 0.1)
+project(stack VERSION 0.5)
 #Choose language
 enable_language(CXX)
 #Add options
@@ -18,7 +18,7 @@ set(STACK_BOOL_SOURCES ${STACK_BOOL_SOURCES_DIR}/Stack-bool.cc)
 add_library(Stack INTERFACE)
 
 target_include_directories(Stack INTERFACE ${STACK_INCLUDES})
-target_sources(Stack INTERFACE ${STACK_BOOL_SOURCES})
+target_sources(Stack PUBLIC ${STACK_BOOL_SOURCES})
 
 if (ENABLE_TIDY)
 set(CMAKE_CXX_CLANG_TIDY
