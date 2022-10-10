@@ -5,20 +5,15 @@ project(stack VERSION 0.5)
 #Choose language
 enable_language(CXX)
 #Add options
-add_compile_options(-Wall -g -ggdb)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
 set(STACK_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/include)
-set(STACK_BOOL_SOURCES_DIR ${CMAKE_CURRENT_SOURCE_DIR}/source)
-set(STACK_BOOL_SOURCES ${STACK_BOOL_SOURCES_DIR}/Stack-bool.cc)
 
 add_library(Stack INTERFACE)
 
 target_include_directories(Stack INTERFACE ${STACK_INCLUDES})
-target_sources(Stack PUBLIC ${STACK_BOOL_SOURCES})
 
 if (ENABLE_TIDY)
 set(CMAKE_CXX_CLANG_TIDY
@@ -29,7 +24,7 @@ set(CMAKE_CXX_CLANG_TIDY
     message(STATUS "clang-tidy ON")
 
 else()
-message(STATUS "clang-tidy OFF")
+    message(STATUS "clang-tidy OFF")
 
 endif()
 

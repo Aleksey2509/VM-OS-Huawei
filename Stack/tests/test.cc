@@ -4,8 +4,6 @@
 #include <vector>
 #include <numeric>
 
-
-
 template <typename T>
 using Stack = custom_containers::Stack<T>;
 
