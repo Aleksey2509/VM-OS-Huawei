@@ -1,11 +1,13 @@
 ---
 Checks: >
   -*,
-  bugprone-*,
   google-*,
-  misc-*,
-  performance-*,
-  portability-*,
+  readability-*,
+  -readability-implicit-bool-conversion,
+  modernize-loop-*,
+  modernize-pass-by-value,
+  modernize-replace-auto-ptr,
+  modernize-use-nullptr
 
 
 WarningsAsErrors: "*"
