@@ -129,6 +129,7 @@ bool Stack<bool>::operator==(const Stack& other) const
     unsigned char* other_it = other.data_;
     unsigned char* it_end = data_ + GetActualSize();
 
+
     for (; iter != (it_end - 1); ++iter, ++other_it)
     {
         if (*iter != *other_it)
@@ -142,8 +143,12 @@ bool Stack<bool>::operator==(const Stack& other) const
     }
     else
     {
-        if ((*iter & (0xFF >> (BITS_IN_CHAR - size_ % BITS_IN_CHAR))) != (*other_it & (0xFF >> (BITS_IN_CHAR - size_ % BITS_IN_CHAR))) )
+        size_t max_char_value = 1 << BITS_IN_CHAR;
+        if ((*iter & (max_char_value >> (BITS_IN_CHAR - size_ % BITS_IN_CHAR))) !=
+            (*other_it & (max_char_value >> (BITS_IN_CHAR - size_ % BITS_IN_CHAR))) )
+        {
             return false;
+        }
     }
 
     return true;

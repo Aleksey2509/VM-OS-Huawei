@@ -10,17 +10,12 @@ Checks: >
   portability-*,
   readability-*,
   -google-readability-braces-around-statements,
-  -google-runtime-references,
   -google-runtime-int,
   -llvm-include-order,
-  -misc-non-private-member-variables-in-classes,
-  -modernize-return-braced-init-list,
   -modernize-use-trailing-return-type,
   -modernize-use-nodiscard,
   -modernize-avoid-c-arrays,
-  -performance-move-const-arg,
   -readability-braces-around-statements,
-  -readability-magic-numbers,
   -readability-implicit-bool-conversion,
 
 
