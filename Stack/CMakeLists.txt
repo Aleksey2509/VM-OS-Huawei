@@ -23,7 +23,7 @@ target_sources(Stack PUBLIC ${STACK_BOOL_SRC_DIR}/${STACK_BOOL_SRC})
 if (ENABLE_TIDY)
 set(CMAKE_CXX_CLANG_TIDY
     clang-tidy;
-    --header-filter=include/*;
+    --header-filter=.*;
     --format-style=file;
     )
     message(STATUS "clang-tidy ON")

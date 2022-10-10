@@ -3,20 +3,9 @@ Checks: >
   -*,
   bugprone-*,
   google-*,
-  llvm-*,
   misc-*,
-  modernize-*,
   performance-*,
   portability-*,
-  readability-*,
-  -google-readability-braces-around-statements,
-  -google-runtime-int,
-  -llvm-include-order,
-  -modernize-use-trailing-return-type,
-  -modernize-use-nodiscard,
-  -modernize-avoid-c-arrays,
-  -readability-braces-around-statements,
-  -readability-implicit-bool-conversion,
 
 
 WarningsAsErrors: "*"

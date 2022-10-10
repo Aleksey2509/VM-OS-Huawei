@@ -1,8 +1,9 @@
 #include <gtest/gtest.h>
 
 #include "Stack.hh"
-#include <vector>
+#include <array>
 #include <numeric>
+#include <ctime>
 
 template <typename T>
 using Stack = custom_containers::Stack<T>;
@@ -16,12 +17,17 @@ public:
 
     using ValueType = T;
 
-    std::vector<T> values {static_cast<T>(-10), static_cast<T>(0), static_cast<T>(20),
-                           static_cast<T>(0), static_cast<T>(0), static_cast<T>(14)};
+    static constexpr size_t VALUES_SIZE = 100;
+    std::array<T, VALUES_SIZE> values = {static_cast<T>(0), static_cast<T>(2), static_cast<T>(5),
+                                                static_cast<T>(3), static_cast<T>(0), static_cast<T>(5)};
+
+    static constexpr size_t ACTION_AMOUNT = 1e6;
+    std::array<T, ACTION_AMOUNT> stress_test;
 
 };
 
-using TestedTypes = ::testing::Types<bool, char, short int, int, long int, float, double>;
+using TestedTypes = ::testing::Types<bool, uint8_t, uint16_t, uint32_t, uint64_t,
+                                     int8_t, int16_t, int32_t, int64_t, float, double>;
 
 TYPED_TEST_SUITE(StackFixture, TestedTypes);
 
@@ -140,4 +146,14 @@ TYPED_TEST(StackFixture, PushPopTop)
 
     EXPECT_EQ(this->first_stk.Top(), this->values[this->values.size() - 3]);
     EXPECT_EQ(this->first_stk.Size(), this->values.size() - 2);
+}
+
+
+TYPED_TEST(StackFixture, StressTest)
+{
+    for (const auto& iter : this->stress_test)
+    {
+        this->first_stk.Push(iter);
+        this->first_stk.Pop();
+    }
 }

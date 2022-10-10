@@ -5,19 +5,19 @@ namespace custom_containers
 {
 
 
-Stack<bool>::Stack() : data_(new unsigned char[static_cast<size_t>(std::ceil(static_cast<double>(capacity_) / BITS_IN_CHAR))])
+Stack<bool>::Stack() : data_(new uint8_t[static_cast<size_t>(std::ceil(static_cast<double>(capacity_) / BITS_IN_CHAR))])
 { }
 
 
 Stack<bool>::Stack(size_t capacity) : capacity_(capacity),
-                                      data_(new unsigned char[static_cast<size_t>(std::ceil(static_cast<double>(capacity_) / BITS_IN_CHAR))])
+                                      data_(new uint8_t[static_cast<size_t>(std::ceil(static_cast<double>(capacity_) / BITS_IN_CHAR))])
 { }
 
 
 
 Stack<bool>::Stack(const Stack& other)
 {
-    data_ = new unsigned char[other.GetActualCapacity()];
+    data_ = new uint8_t[other.GetActualCapacity()];
     size_ = other.size_;
     capacity_ = other.capacity_;
 
@@ -38,7 +38,7 @@ void Stack<bool>::Push(bool elem)
 
     if (size_ == capacity_)
     {
-        auto* tmp_data = new unsigned char[EXPANSION_FACTOR * GetActualCapacity()];
+        auto* tmp_data = new uint8_t[EXPANSION_FACTOR * GetActualCapacity()];
         std::copy(data_, data_ + GetActualCapacity(), tmp_data);
         delete[] data_;
         data_ = tmp_data;
@@ -47,11 +47,11 @@ void Stack<bool>::Push(bool elem)
 
     if (elem)
     {
-        data_[size_ / BITS_IN_CHAR] |= static_cast<unsigned char>(1 << (size_ % BITS_IN_CHAR));
+        data_[size_ / BITS_IN_CHAR] |= static_cast<uint8_t>(1 << (size_ % BITS_IN_CHAR));
     }
     else
     {
-        data_[size_ / BITS_IN_CHAR] &= ~static_cast<unsigned char>(1 << (size_ % BITS_IN_CHAR));
+        data_[size_ / BITS_IN_CHAR] &= ~static_cast<uint8_t>(1 << (size_ % BITS_IN_CHAR));
     }
 
     size_++;
@@ -62,7 +62,9 @@ void Stack<bool>::Push(bool elem)
 void Stack<bool>::Pop()
 {
     if (size_ != 0)
+    {
         size_--;
+    }
 }
 
 
@@ -93,7 +95,7 @@ Stack<bool>& Stack<bool>::operator=(const Stack& other)
     if (this != std::addressof(other))
     {
         delete[] data_;
-        data_ = new unsigned char[other.GetActualCapacity()];
+        data_ = new uint8_t[other.GetActualCapacity()];
         size_ = other.size_;
         capacity_ = other.capacity_;
 
@@ -120,26 +122,34 @@ Stack<bool>& Stack<bool>::operator=(Stack&& other) noexcept
 bool Stack<bool>::operator==(const Stack& other) const
 {
     if (size_ != other.size_)
+    {
         return false;
+    }
 
     if (Empty())
+    {
         return true;
+    }
 
-    unsigned char* iter = data_;
-    unsigned char* other_it = other.data_;
-    unsigned char* it_end = data_ + GetActualSize();
+    uint8_t* iter = data_;
+    uint8_t* other_it = other.data_;
+    uint8_t* it_end = data_ + GetActualSize();
 
 
     for (; iter != (it_end - 1); ++iter, ++other_it)
     {
         if (*iter != *other_it)
+        {
             return false;
+        }
     }
 
     if (!(size_ % BITS_IN_CHAR))
     {
         if (*iter != *other_it)
+        {
             return false;
+        }
     }
     else
     {

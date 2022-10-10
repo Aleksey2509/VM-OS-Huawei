@@ -4,10 +4,10 @@
 #include <algorithm>
 #include <bitset>
 #include <climits>
-#include <limits>
-#include <cstdlib>
 #include <cmath>
-#include <iostream>
+#include <cstdint>
+#include <cstdlib>
+#include <limits>
 
 namespace custom_containers
 {
@@ -75,7 +75,7 @@ public:
 
     ~Stack();
 
-    static constexpr size_t START_SIZE = std::numeric_limits<unsigned char>::digits;
+    static constexpr size_t START_SIZE = std::numeric_limits<uint8_t>::digits;
     static constexpr size_t BITS_IN_CHAR = START_SIZE;
 
 
@@ -88,7 +88,7 @@ private:
     size_t capacity_ = START_SIZE;
     size_t size_ = 0;
 
-    unsigned char* data_ = nullptr;
+    uint8_t* data_ = nullptr;
 };
 
 template <typename T>
@@ -138,7 +138,9 @@ template <typename T>
 void Stack<T>::Pop()
 {
     if (size_ != 0)
+    {
         size_--;
+    }
 }
 
 template <typename T>
@@ -199,14 +201,18 @@ template <typename T>
 bool Stack<T>::operator==(const Stack& other) const
 {
     if (size_ != other.size_)
+    {
         return false;
+    }
 
     T* iter = data_;
     T* other_it = other.data_;
     for (; iter != data_ + size_; ++iter, ++other_it)
     {
         if (*iter != *other_it)
+        {
             return false;
+        }
     }
 
     return true;
