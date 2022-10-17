@@ -1,7 +1,7 @@
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRECTORIES})
 
-set(COMMON_FLAGS -Wall -Wextra)
+set(COMMON_FLAGS -Wall -Wextra -Werror)
 
 function(compile_test EXEC SRC)
     target_sources(${EXEC} PRIVATE ./${SRC})
