@@ -7,7 +7,7 @@ function(compile_test EXEC SRC)
     target_sources(${EXEC} PRIVATE ./${SRC})
     target_compile_options(${EXEC} PRIVATE ${COMMON_FLAGS})
     add_dependencies(${EXEC} Stack)
-    target_link_libraries(${EXEC} Stack)
+    target_link_libraries(${EXEC} Stack GTest::Main)
 endfunction()
 
 set(STACK_TEST_EXEC unit_test_stack)
@@ -16,7 +16,6 @@ add_executable(${STACK_TEST_EXEC})
 
 compile_test(${STACK_TEST_EXEC} ${STACK_TEST_SRC})
 
-target_link_libraries(${STACK_TEST_EXEC} GTest::Main)
 
 add_custom_target(test_stack
 		  COMMENT "Running tests"

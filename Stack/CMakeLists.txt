@@ -19,8 +19,6 @@ add_library(Stack INTERFACE)
 target_include_directories(Stack INTERFACE ${STACK_INCLUDES})
 target_sources(Stack PUBLIC ${STACK_BOOL_SRC_DIR}/${STACK_BOOL_SRC})
 
-option(TRY_MAKE_TARGET "Making clang-tidy check as a target" ON)
-
 find_program(CLANG_TIDY "clang-tidy")
 if (CLANG_TIDY)
 
