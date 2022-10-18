@@ -4,6 +4,8 @@
 #include <array>
 #include <numeric>
 #include <ctime>
+#include <string>
+#include <vector>
 
 template <typename T>
 using Stack = custom_containers::Stack<T>;
@@ -27,7 +29,8 @@ public:
 };
 
 using TestedTypes = ::testing::Types<bool, uint8_t, uint16_t, uint32_t, uint64_t,
-                                     int8_t, int16_t, int32_t, int64_t, float, double>;
+                                     int8_t, int16_t, int32_t, int64_t, float, double,
+                                     std::vector<uint8_t>, std::vector<std::string>>;
 
 TYPED_TEST_SUITE(StackFixture, TestedTypes);
 
