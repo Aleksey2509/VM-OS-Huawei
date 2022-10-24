@@ -75,8 +75,8 @@ public:
 
     ~Stack();
 
-    static constexpr size_t START_SIZE = std::numeric_limits<uint8_t>::digits;
-    static constexpr size_t BITS_IN_CHAR = START_SIZE;
+    static constexpr size_t BITS_IN_UINT8 = std::numeric_limits<uint8_t>::digits;
+    static constexpr size_t START_SIZE = BITS_IN_UINT8;
 
 
     static constexpr unsigned int EXPANSION_FACTOR = 2;

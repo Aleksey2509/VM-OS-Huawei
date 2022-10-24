@@ -5,12 +5,12 @@ namespace custom_containers
 {
 
 
-Stack<bool>::Stack() : data_(new uint8_t[static_cast<size_t>(std::ceil(static_cast<double>(capacity_) / BITS_IN_CHAR))])
+Stack<bool>::Stack() : data_(new uint8_t[static_cast<size_t>(std::ceil(static_cast<double>(capacity_) / BITS_IN_UINT8))])
 { }
 
 
 Stack<bool>::Stack(size_t capacity) : capacity_(capacity),
-                                      data_(new uint8_t[static_cast<size_t>(std::ceil(static_cast<double>(capacity_) / BITS_IN_CHAR))])
+                                      data_(new uint8_t[static_cast<size_t>(std::ceil(static_cast<double>(capacity_) / BITS_IN_UINT8))])
 { }
 
 
@@ -42,16 +42,16 @@ void Stack<bool>::Push(bool elem)
         std::copy(data_, data_ + GetActualCapacity(), tmp_data);
         delete[] data_;
         data_ = tmp_data;
-        capacity_ = EXPANSION_FACTOR * GetActualCapacity() * BITS_IN_CHAR;
+        capacity_ = EXPANSION_FACTOR * GetActualCapacity() * BITS_IN_UINT8;
     }
 
     if (elem)
     {
-        data_[size_ / BITS_IN_CHAR] |= static_cast<uint8_t>(1 << (size_ % BITS_IN_CHAR));
+        data_[size_ / BITS_IN_UINT8] |= static_cast<uint8_t>(1 << (size_ % BITS_IN_UINT8));
     }
     else
     {
-        data_[size_ / BITS_IN_CHAR] &= ~static_cast<uint8_t>(1 << (size_ % BITS_IN_CHAR));
+        data_[size_ / BITS_IN_UINT8] &= ~static_cast<uint8_t>(1 << (size_ % BITS_IN_UINT8));
     }
 
     size_++;
@@ -86,7 +86,7 @@ size_t Stack<bool>::Capacity() const
 
 bool Stack<bool>::Top()
 {
-    return data_[GetActualSize() - 1] & (1 << (((size_ - 1) % BITS_IN_CHAR)));
+    return data_[GetActualSize() - 1] & (1 << (((size_ - 1) % BITS_IN_UINT8)));
 }
 
 
@@ -144,7 +144,7 @@ bool Stack<bool>::operator==(const Stack& other) const
         }
     }
 
-    if (!(size_ % BITS_IN_CHAR))
+    if (!(size_ % BITS_IN_UINT8))
     {
         if (*iter != *other_it)
         {
@@ -153,9 +153,9 @@ bool Stack<bool>::operator==(const Stack& other) const
     }
     else
     {
-        size_t max_char_value = 1 << BITS_IN_CHAR;
-        if ((*iter & (max_char_value >> (BITS_IN_CHAR - size_ % BITS_IN_CHAR))) !=
-            (*other_it & (max_char_value >> (BITS_IN_CHAR - size_ % BITS_IN_CHAR))) )
+        size_t max_char_value = 1 << BITS_IN_UINT8;
+        if ((*iter & (max_char_value >> (BITS_IN_UINT8 - size_ % BITS_IN_UINT8))) !=
+            (*other_it & (max_char_value >> (BITS_IN_UINT8 - size_ % BITS_IN_UINT8))) )
         {
             return false;
         }
@@ -177,12 +177,12 @@ Stack<bool>::~Stack()
 
 size_t Stack<bool>::GetActualCapacity() const
 {
-    return static_cast<size_t>(std::ceil(static_cast<double>(capacity_) / BITS_IN_CHAR));
+    return static_cast<size_t>(std::ceil(static_cast<double>(capacity_) / BITS_IN_UINT8));
 }
 
 size_t Stack<bool>::GetActualSize() const
 {
-    return static_cast<size_t>(std::ceil(static_cast<double>(size_) / BITS_IN_CHAR));
+    return static_cast<size_t>(std::ceil(static_cast<double>(size_) / BITS_IN_UINT8));
 }
 
 } // namespace custom_containers
