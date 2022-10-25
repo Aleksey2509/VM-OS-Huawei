@@ -153,7 +153,7 @@ bool Stack<bool>::operator==(const Stack& other) const
     }
     else
     {
-        size_t max_char_value = 1 << BITS_IN_UINT8;
+        const size_t max_char_value = 1 << BITS_IN_UINT8;
         if ((*iter & (max_char_value >> (BITS_IN_UINT8 - size_ % BITS_IN_UINT8))) !=
             (*other_it & (max_char_value >> (BITS_IN_UINT8 - size_ % BITS_IN_UINT8))) )
         {
