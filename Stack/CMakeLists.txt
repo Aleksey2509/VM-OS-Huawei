@@ -33,16 +33,17 @@ if (CLANG_TIDY)
 
 endif()
 
-
-file(GLOB_RECURSE ALL_SOURCE_FILES *.cc *.hh)
-    add_custom_target(
-        format
-        COMMAND clang-tidy
-        -style=file
-        -i
-        ${ALL_SOURCE_FILES}
-    )
-    message(STATUS "clang-format target ON")
-
+find_program(CLANG_FORMAT "clang-format")
+if (CLANG_FORMAT)
+    file(GLOB_RECURSE ALL_SOURCE_FILES *.cc *.hh)
+        add_custom_target(
+            format
+            COMMAND clang-format
+            -style=file
+            -i
+            ${ALL_SOURCE_FILES}
+        )
+        message(STATUS "clang-format target ON")
+endif()
 
 add_subdirectory(tests)
