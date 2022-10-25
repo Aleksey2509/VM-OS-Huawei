@@ -159,4 +159,6 @@ TYPED_TEST(StackFixture, StressTest)
         this->first_stk.Push(iter);
         this->first_stk.Pop();
     }
+
+    ASSERT_EQ(this->first_stk.Empty(), true);
 }

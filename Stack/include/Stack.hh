@@ -2,10 +2,7 @@
 #define STACK_HH
 
 #include <algorithm>
-#include <bitset>
-#include <climits>
 #include <cmath>
-#include <cstdint>
 #include <cstdlib>
 #include <limits>
 
