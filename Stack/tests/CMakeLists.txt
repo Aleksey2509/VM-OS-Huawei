@@ -23,7 +23,7 @@ add_custom_target(test_stack
 
 if(SANITIZERS)
     message("-- Build with sanitizers")
-    target_compile_options(${STACK_TEST_EXEC} PUBLIC -fsanitize=address -g)
+    target_compile_options(${STACK_TEST_EXEC} PUBLIC -fsanitize=address -fsanitize=undefined -g)
     set_target_properties(${STACK_TEST_EXEC} PROPERTIES LINK_FLAGS "-fsanitize=address")
 
 endif()

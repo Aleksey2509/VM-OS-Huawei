@@ -19,12 +19,12 @@ public:
 
     using ValueType = T;
 
-    static constexpr size_t VALUES_SIZE = 100;
+    static constexpr size_t VALUES_SIZE = 6;
     std::array<T, VALUES_SIZE> values = {static_cast<T>(0), static_cast<T>(2), static_cast<T>(5),
                                                 static_cast<T>(3), static_cast<T>(0), static_cast<T>(5)};
 
     static constexpr size_t ACTION_AMOUNT = 1e6;
-    std::array<T, ACTION_AMOUNT> stress_test;
+    std::vector<T> stress_test;
 
 };
 
@@ -161,4 +161,10 @@ TYPED_TEST(StackFixture, StressTest)
     }
 
     ASSERT_EQ(this->first_stk.Empty(), true);
+}
+
+int main(int argc, char** argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }
