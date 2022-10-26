@@ -23,8 +23,7 @@ public:
     std::array<T, VALUES_SIZE> values = {static_cast<T>(0), static_cast<T>(2), static_cast<T>(5),
                                                 static_cast<T>(3), static_cast<T>(0), static_cast<T>(5)};
 
-    static constexpr size_t ACTION_AMOUNT = 1e6;
-    std::vector<T> stress_test;
+    static constexpr size_t STRESS_TEST_ACTION_AMOUNT = 1e6;
 
 };
 
@@ -154,7 +153,8 @@ TYPED_TEST(StackFixture, PushPopTop)
 
 TYPED_TEST(StackFixture, StressTest)
 {
-    for (const auto& iter : this->stress_test)
+    std::vector<typename TestFixture::ValueType> stress_test (TestFixture::STRESS_TEST_ACTION_AMOUNT, static_cast<typename TestFixture::ValueType>(0));
+    for (const auto& iter : stress_test)
     {
         this->first_stk.Push(iter);
         this->first_stk.Pop();
