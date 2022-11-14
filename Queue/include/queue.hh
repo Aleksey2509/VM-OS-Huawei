@@ -2,7 +2,7 @@
 #define QUEUE_HH
 
 #include <concepts>
-#include "Stack.hh"
+#include "stack.hh"
 #include "list.hh"
 
 namespace custom_containers
