@@ -2,6 +2,8 @@
 #define LIST_HH
 #include <cstdlib>
 #include <utility>
+#include <list>
+#include <iostream>
 
 namespace custom_containers
 {
@@ -45,26 +47,30 @@ public:
     bool operator!=(const List& other) const;
 
     ~List();
+
+private:
+    void push_empty(const T& elem);
+    void pop_last();
 };
 
 template <typename T>
-List<T>::List(const List& other)
+List<T>::List(const List& other) : size_(other.size_)
 {
-    auto other_it = other.front_;
-    auto it = front_;
-    Node* prev_it = nullptr;
-
-    while(other_it)
+    if (other.front_)
     {
-        prev_it = it;
-        it = new Node;
+        front_ = new Node;
+        front_->data = other.front_->data;
+    }
 
-        if (prev_it)
-            prev_it->next = it;
-        it->prev = prev_it;
-        it->data = other_it->data;
+    back_ = front_;
 
-        size_++;
+    for(auto other_it = other.front_->next; other_it; other_it = other_it->next)
+    {
+        back_->next = new Node;
+        back_->next->prev = back_;
+        back_ = back_->next;
+
+        back_->data = other_it->data;
     }
 
 }
@@ -72,13 +78,13 @@ List<T>::List(const List& other)
 template <typename T>
 T& List<T>::front () &
 {
-    return front->data;
+    return front_->data;
 }
 
 template <typename T>
 T& List<T>::back () &
 {
-    return back->data;
+    return back_->data;
 }
 
 template <typename T>
@@ -93,14 +99,31 @@ size_t List<T>::size()
     return size_;
 }
 
-// debug me
+template <typename T>
+void List<T>::push_empty(const T& elem)
+{
+    front_ = new Node;
+    front_->data = elem;
+    back_ = front_;
+    size_++;
+
+    return;
+}
+
 template <typename T>
 void List<T>::push_front(const T& elem)
 {
-    auto new_front = new Node;
-    new_front->data = elem;
-    new_front->next = front_;
-    front_ = new_front;
+    if (empty())
+    {
+        push_empty(elem);
+        return;
+    }
+
+    front_->prev = new Node;
+    front_->prev->next = front_;
+    front_ = front_->prev;
+    front_->data = elem;
+
     size_++;
 }
 
@@ -108,34 +131,65 @@ void List<T>::push_front(const T& elem)
 template <typename T>
 void List<T>::push_back(const T& elem)
 {
-    auto new_back = new Node;
-    new_back->data = elem;
-    new_back->prev = back_;
-    back_ = new_back;
+    if (empty())
+    {
+        push_empty(elem);
+        return;
+    }
+
+    back_->next = new Node;
+    back_->next->prev = back_;
+    back_ = back_->next;
+    back_->data = elem;
+
     size_++;
 }
 
-// debug me
+template <typename T>
+void List<T>::pop_last()
+{
+    delete front_;
+    front_ = nullptr;
+    back_ = nullptr;
+    size_--;
+
+    return;
+}
+
 template <typename T>
 void List<T>::pop_front()
 {
-    auto new_front = front_->next;
-    delete front_;
-    front_ = new_front;
+    if (size_ == 1)
+    {
+        pop_last();
+        return;
+    }
+
+    front_ = front_->next;
+    delete front_->prev;
+    front_->prev = nullptr;
     size_--;
+
+    return;
 }
 
-// debug me
 template <typename T>
 void List<T>::pop_back()
 {
-    auto new_back = front_->back;
-    delete back_;
-    back_ = new_back;
+    if (size_ == 1)
+    {
+        pop_last();
+        return;
+    }
+
+    back_ = back_->prev;
+    delete back_->next;
+    back_->next = nullptr;
     size_--;
+
+    return;
 }
 
-// works?
 template <typename T>
 List<T>& List<T>::operator=(const List& other)
 {

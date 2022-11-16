@@ -17,10 +17,10 @@ set(QUEUE_SOURCES ${QUEUE_SOURCES_DIR}/${QUEUE_SOURCE_FILES})
 
 add_library(Queue STATIC ${QUEUE_SOURCES})
 
-target_include_directories(Queue PUBLIC ${CACHE_INCLUDES})
-target_link_libraries(Queue PUBLIC Stack)
+target_include_directories(Queue PUBLIC ${QUEUE_INCLUDES})
+target_link_libraries(Queue PUBLIC Stack List)
 
 add_dependencies(Queue Stack List)
-# add_subdirectory(tests)
-add_subdirectory(stack)
 add_subdirectory(list)
+add_subdirectory(stack)
+#add_subdirectory(tests)
