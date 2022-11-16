@@ -18,7 +18,7 @@ set(QUEUE_SOURCES ${QUEUE_SOURCES_DIR}/${QUEUE_SOURCE_FILES})
 add_library(Queue STATIC ${QUEUE_SOURCES})
 
 target_include_directories(Queue PUBLIC ${QUEUE_INCLUDES})
-target_link_libraries(Queue PUBLIC Stack List)
+target_link_libraries(Queue PUBLIC Stack)
 
 add_dependencies(Queue Stack List)
 add_subdirectory(list)

@@ -19,7 +19,7 @@ add_executable(${LIST_TEST_EXEC})
 target_sources(${LIST_TEST_EXEC} PRIVATE ./${LIST_TEST_SRC})
 target_compile_options(${LIST_TEST_EXEC} PRIVATE ${COMMON_FLAGS})
 add_dependencies(${LIST_TEST_EXEC} List)
-target_link_libraries(${LIST_TEST_EXEC} Stack List Queue GTest::Main)
+target_link_libraries(${LIST_TEST_EXEC} GTest::Main)
 
 add_custom_target(test_list
 COMMENT "Running tests"
