@@ -21,19 +21,19 @@ public:
     T& front () &{};
     T& back () &{};
 
-    bool empty(){};
-    size_t size(){};
+    bool empty(){}
+    size_t size(){}
 
-    void push(const T& elem){};
-    void pop(){};
+    void push(const T& elem){}
+    void pop(){}
 
-    Queue& operator=(const Queue& other){};
-    Queue& operator=(Queue&& other) noexcept{};
+    Queue& operator=(const Queue& other){}
+    Queue& operator=(Queue&& other) noexcept{}
 
-    bool operator==(const Queue& other) const{};
-    bool operator!=(const Queue& other) const{};
+    bool operator==(const Queue& other) const{}
+    bool operator!=(const Queue& other) const{}
 
-    ~Queue(){};
+    ~Queue(){}
 
 };
 
@@ -45,22 +45,22 @@ public:
     Queue(const Queue& other) = default;
     Queue(Queue&& other) = default;
 
-    T& front () &{};
-    T& back () &{};
+    T& front () &{}
+    T& back () &{}
 
-    bool empty(){};
-    size_t size(){};
+    bool empty(){}
+    size_t size(){}
 
-    void push(const T& elem){};
-    void pop(){};
+    void push(const T& elem){}
+    void pop(){}
 
-    Queue& operator=(const Queue& other) = default;
-    Queue& operator=(Queue&& other) noexcept = default;
+    Queue& operator=(const Queue& other) = default
+    Queue& operator=(Queue&& other) noexcept = default
 
-    bool operator==(const Queue& other) const{};
-    bool operator!=(const Queue& other) const{};
+    bool operator==(const Queue& other) const{}
+    bool operator!=(const Queue& other) const{}
 
-    ~Queue(){};
+    ~Queue(){}
 
 };
 
