@@ -8,6 +8,7 @@ class ListFixture : public ::testing::Test
 {
 public:
     custom_containers::List<T> lst;
+    custom_containers::List<T> lst2;
 
     using ValueType = T;
 
@@ -29,21 +30,142 @@ TYPED_TEST_SUITE(ListFixture, TestedTypes);
 
 TYPED_TEST(ListFixture, ListDefaultCtor)
 {
-    EXPECT_EQ(this->lst.size(), 0);
+    ASSERT_EQ(this->lst.size(), 0);
+    ASSERT_EQ(this->lst.empty(), true);
 }
 
 
-TYPED_TEST(ListFixture, ListPushBack)
+TYPED_TEST(ListFixture, ListPushBackPopFront)
 {
-    this->lst.push_back(this->values[0]);
-    EXPECT_EQ(this->lst.size(), 1);
-    EXPECT_EQ(this->lst.front(), this->values[0]);
-    EXPECT_EQ(this->lst.back(), this->values[0]);
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->lst.push_back(this->values[i]);
+        EXPECT_EQ(this->lst.size(), i + 1);
+        EXPECT_EQ(this->lst.back(), this->values[i]);
+        EXPECT_EQ(this->lst.front(), this->values[0]);
+    }
+    
+
+    for (size_t i = 0; i < this->values.size() - 1; ++i)
+    {
+        this->lst.pop_front();
+        EXPECT_EQ(this->lst.size(), this->values.size() - i - 1);
+        EXPECT_EQ(this->lst.back(), this->values[this->values.size() - 1]);
+        EXPECT_EQ(this->lst.front(), this->values[i + 1]);
+    }
 
     this->lst.pop_front();
     EXPECT_EQ(this->lst.size(), 0);
+}
 
-    this->lst.push_back(this->values[0]);
-    this->lst.pop_front();
+TYPED_TEST(ListFixture, ListPushFrontPopBack)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->lst.push_front(this->values[i]);
+        EXPECT_EQ(this->lst.size(), i + 1);
+        EXPECT_EQ(this->lst.front(), this->values[i]);
+        EXPECT_EQ(this->lst.back(), this->values[0]);
+    }
+    
+
+    for (size_t i = 0; i < this->values.size() - 1; ++i)
+    {
+        this->lst.pop_back();
+        EXPECT_EQ(this->lst.size(), this->values.size() - i - 1);
+        EXPECT_EQ(this->lst.back(), this->values[i + 1]);
+        EXPECT_EQ(this->lst.front(), this->values[this->values.size() - 1]);
+    }
+
+    this->lst.pop_back();
     EXPECT_EQ(this->lst.size(), 0);
+}
+
+TYPED_TEST(ListFixture, equalityOperator)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->lst.push_front(this->values[i]);
+        this->lst2.push_front(this->values[i]);
+    }
+
+    EXPECT_EQ(this->lst == this->lst2, true);
+
+    this->lst.pop_back();
+
+    EXPECT_EQ(this->lst != this->lst2, true);
+
+}
+
+TYPED_TEST(ListFixture, copyCtor)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->lst.push_front(this->values[i]);
+    }
+
+    custom_containers::List<typename TestFixture::ValueType> to_copy_to{this->lst};
+
+    EXPECT_EQ(this->lst == to_copy_to, true);
+
+    this->lst.pop_back();
+
+    EXPECT_EQ(this->lst != to_copy_to, true);
+}
+
+TYPED_TEST(ListFixture, copyAssignOperator)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->lst.push_front(this->values[i]);
+    }
+
+    this->lst2 = this->lst;
+
+    EXPECT_EQ(this->lst == this->lst2, true);
+
+    this->lst.pop_back();
+
+    EXPECT_EQ(this->lst != this->lst2, true);
+}
+
+TYPED_TEST(ListFixture, moveCtor)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->lst.push_front(this->values[i]);
+        this->lst2.push_front(this->values[i]);
+    }
+
+    custom_containers::List<typename TestFixture::ValueType> to_move_to{std::move(this->lst)};
+
+    EXPECT_EQ(this->lst2 == to_move_to, true);
+
+    this->lst2.pop_back();
+
+    EXPECT_EQ(this->lst2 != to_move_to, true);
+}
+
+TYPED_TEST(ListFixture, moveAssignOperator)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->lst.push_front(this->values[i]);
+    }
+
+    custom_containers::List<typename TestFixture::ValueType> to_move{this->lst};
+
+    this->lst2 = std::move(to_move);
+
+    EXPECT_EQ(this->lst == this->lst2, true);
+
+    this->lst.pop_back();
+
+    EXPECT_EQ(this->lst != this->lst2, true);
+}
+
+int main(int argc, char** argv)
+{
+    ::testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
 }

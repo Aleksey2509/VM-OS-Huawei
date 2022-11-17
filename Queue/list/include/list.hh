@@ -26,13 +26,16 @@ class List final
 public:
     List() = default;
     List(const List& other);
-    List(List&& other) = default;
+    List(List&& other) noexcept;
+
+    const T& front() const&;
+    const T& back() const&;
 
     T& front () &;
     T& back () &;
 
-    bool empty();
-    size_t size();
+    bool empty() const;
+    size_t size() const;
 
     void push_front(const T& elem);
     void push_back(const T& elem);
@@ -41,7 +44,7 @@ public:
     void pop_back();
 
     List& operator=(const List& other);
-    List& operator=(List&& other) noexcept = default;
+    List& operator=(List&& other) noexcept;
 
     bool operator==(const List& other) const;
     bool operator!=(const List& other) const;
@@ -74,9 +77,22 @@ List<T>::List(const List& other) : size_(other.size_)
     }
 
 }
+template <typename T>
+List<T>::List(List&& other) noexcept
+{
+    std::swap(this->front_, other.front_);
+    std::swap(this->back_, other.back_);
+    std::swap(this->size_, other.size_);
+}
 
 template <typename T>
 T& List<T>::front () &
+{
+    return front_->data;
+}
+
+template <typename T>
+const T& List<T>::front() const&
 {
     return front_->data;
 }
@@ -88,13 +104,19 @@ T& List<T>::back () &
 }
 
 template <typename T>
-bool List<T>::empty()
+const T& List<T>::back() const&
+{
+    return back_->data;
+}
+
+template <typename T>
+bool List<T>::empty() const
 {
     return size_ == 0;
 }
 
 template <typename T>
-size_t List<T>::size()
+size_t List<T>::size() const
 {
     return size_;
 }
@@ -199,6 +221,39 @@ List<T>& List<T>::operator=(const List& other)
     std::swap(this->size_, tmp.size_);
 
     return *this;
+}
+
+template <typename T>
+List<T>& List<T>::operator=(List&& other) noexcept
+{
+    std::swap(this->front_, other.front_);
+    std::swap(this->back_, other.back_);
+    std::swap(this->size_, other.size_);
+
+    return *this;
+}
+
+template<typename T>
+bool List<T>::operator==(const List& other) const
+{
+    if (size_ != other.size_)
+        return false;
+
+    auto it = front_;
+    auto other_it = other.front_;
+    for (; it; it = it->next, other_it = other_it->next)
+    {
+        if (it->data != other_it->data)
+            return false;
+    }
+
+    return true;
+}
+
+template<typename T>
+bool List<T>::operator!=(const List& other) const
+{
+    return !(*this == other);
 }
 
 template <typename T>
