@@ -1,8 +1,7 @@
 #include <gtest/gtest.h>
-#include <iostream>
-
 
 #include "queue.hh"
+#include <type_traits>
 
 template <typename T>
 struct PairListType
