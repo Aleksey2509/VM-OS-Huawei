@@ -89,6 +89,10 @@ bool Stack<bool>::Top()
     return data_[GetActualSize() - 1] & (1 << (((size_ - 1) % BITS_IN_UINT8)));
 }
 
+bool Stack<bool>::Top() const
+{
+    return data_[GetActualSize() - 1] & (1 << (((size_ - 1) % BITS_IN_UINT8)));
+}
 
 Stack<bool>& Stack<bool>::operator=(const Stack& other)
 {

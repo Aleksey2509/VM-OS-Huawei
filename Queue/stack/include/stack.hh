@@ -26,6 +26,7 @@ public:
     size_t Size() const;
     size_t Capacity() const;
     T& Top();
+    const T& Top() const;
 
     Stack& operator=(const Stack& other);
     Stack& operator=(Stack&& other) noexcept;
@@ -63,6 +64,7 @@ public:
     size_t Size() const;
     size_t Capacity() const;
     bool Top();
+    bool Top() const;
 
     Stack& operator=(const Stack& other);
     Stack& operator=(Stack&& other) noexcept;
@@ -161,6 +163,12 @@ size_t Stack<T>::Capacity() const
 
 template <typename T>
 T& Stack<T>::Top()
+{
+    return data_[size_ - 1];
+}
+
+template <typename T>
+const T& Stack<T>::Top() const
 {
     return data_[size_ - 1];
 }
