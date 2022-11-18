@@ -4,6 +4,7 @@
 #include <concepts>
 #include "stack.hh"
 #include "list.hh"
+#include <type_traits>
 
 namespace custom_containers
 {
@@ -54,11 +55,13 @@ public:
     Queue(const Queue& other) = default;
     Queue(Queue&& other) = default;
 
-    const T& front () const&;
-    const T& back () const&;
+// decltype(push_stack_.Top())
 
-    T& front () &;
-    T& back () &;
+    auto front () const& -> decltype(pop_stack_.Top());
+    auto back () const& -> decltype(push_stack_.Top());
+
+    auto front () & -> decltype(pop_stack_.Top());
+    auto back () & -> decltype(push_stack_.Top());
 
     bool empty();
     size_t size();
@@ -144,41 +147,57 @@ bool Queue<T, Container>::operator!=(const Queue& other) const
 template <typename T>
 void Queue<T, custom_containers::Stack<T>>::MoveFromPushToPop()
 {
+    // we have to preserve the last element of push_stack_ in push_stack_ for correct work of back()
+
+    // take it out, so it is not copied to pop_stack_
+    auto push_stack_back = push_stack_.Top();
+    push_stack_.Pop();
+
     while(!(push_stack_.Empty()))
     {
         pop_stack_.Push(push_stack_.Top());
+        push_stack_.Pop();
     }
+
+    // put the last element back into the push_stack()
+    push_stack_.Push(push_stack_back);
 }
 
 template <typename T>
-T& Queue<T, custom_containers::Stack<T>>::front () &
-{
-    if (push_stack_.Empty())
-        MoveFromPushToPop();
+auto Queue<T, custom_containers::Stack<T>>::front () const& -> decltype(pop_stack_.Top())
+    {
+        if (pop_stack_.Empty() && (push_stack_.Size() == 1))
+            return push_stack_.Top();
 
+        if (pop_stack_.Empty())
+            MoveFromPushToPop();
+        
+        return pop_stack_.Top();
+    }
+
+template <typename T>
+auto Queue<T, custom_containers::Stack<T>>::back () const& -> decltype(push_stack_.Top())
+{
     return push_stack_.Top();
 }
 
 template <typename T>
-T& Queue<T, custom_containers::Stack<T>>::back () &
-{
-    return pop_stack_.Top();
-}
+auto Queue<T, custom_containers::Stack<T>>::front () & -> decltype(pop_stack_.Top())
+    {
+        if ((pop_stack_.Empty()) && (push_stack_.Size() == 1))
+            return push_stack_.Top();
+
+        if (pop_stack_.Empty())
+            MoveFromPushToPop();
+        
+        return pop_stack_.Top();
+    }
 
 template <typename T>
-const T& Queue<T, custom_containers::Stack<T>>::front () const&
-{
-    if (push_stack_.Empty())
-        MoveFromPushToPop();
-
-    return push_stack_.Top();
-}
-
-template <typename T>
-const T& Queue<T, custom_containers::Stack<T>>::back () const &
-{
-    return pop_stack_.Top();
-}
+auto Queue<T, custom_containers::Stack<T>>::back () & -> decltype(push_stack_.Top())
+    {
+        return push_stack_.Top();
+    }
 
 template <typename T>
 bool Queue<T, custom_containers::Stack<T>>::empty()
@@ -201,7 +220,13 @@ void Queue<T, custom_containers::Stack<T>>::push(const T& elem)
 template <typename T>
 void Queue<T, custom_containers::Stack<T>>::pop()
 {
-    if (push_stack_.Empty())
+    if (pop_stack_.Empty() && (push_stack_.Size() == 1))
+    {
+        push_stack_.Pop();
+        return;
+    }
+
+    if (pop_stack_.Empty())
         MoveFromPushToPop();
 
     pop_stack_.Pop();
