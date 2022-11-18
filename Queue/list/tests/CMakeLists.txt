@@ -22,5 +22,5 @@ COMMAND ./${LIST_TEST_EXEC})
 
 if(SANITIZERS)
     target_compile_options(${LIST_TEST_EXEC} PUBLIC -fsanitize=address -fsanitize=undefined -g)
-    set_target_properties(${LIST_TEST_EXEC} PROPERTIES LINK_FLAGS "-fsanitize=address")
+    set_target_properties(${LIST_TEST_EXEC} PROPERTIES LINK_FLAGS "-fsanitize=address -fsanitize=undefined")
 endif()

@@ -17,8 +17,6 @@ public:
     std::array<T, VALUES_SIZE> values = {static_cast<T>(0), static_cast<T>(2), static_cast<T>(5),
                                                 static_cast<T>(3), static_cast<T>(0), static_cast<T>(5)};
 
-    static constexpr size_t STRESS_TEST_ACTION_AMOUNT = 1e6;
-
 };
 
 
@@ -162,6 +160,38 @@ TYPED_TEST(ListFixture, moveAssignOperator)
     this->lst.pop_back();
 
     EXPECT_EQ(this->lst != this->lst2, true);
+}
+
+TYPED_TEST(ListFixture, Front)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->lst.push_front(this->values[i]);
+        this->lst2.push_front(this->values[i]);
+    }
+
+    ASSERT_EQ(this->lst == this->lst2, true);
+
+    auto&& front = this->lst.front();
+    front = this->values.front();
+
+    EXPECT_EQ(this->lst == this->lst2, false);
+}
+
+TYPED_TEST(ListFixture, Back)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->lst.push_front(this->values[i]);
+        this->lst2.push_front(this->values[i]);
+    }
+
+    ASSERT_EQ(this->lst == this->lst2, true);
+
+    auto&& back = this->lst.back();
+    back = this->values.back();
+
+    EXPECT_EQ(this->lst == this->lst2, false);
 }
 
 int main(int argc, char** argv)
