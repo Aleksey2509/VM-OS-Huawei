@@ -1,8 +1,5 @@
 #include <benchmark/benchmark.h>
 #include "queue.hh"
-#include <vector>
-#include <algorithm>
-#include <limits>
 
 constexpr size_t RangeMultiplier = 2;
 constexpr size_t RangeStart = 1 << 15;
@@ -40,6 +37,17 @@ static void QueuePushing(benchmark::State& state)
             auto&& back = queue.back();
             back = i - 1;
         }
+
+        for (size_t i = 0; i < state.range() - 1; i++)
+        {
+            queue.pop();
+            auto&& front = queue.front();
+            front = i + 1;
+            auto&& back = queue.back();
+            back = i - 1;
+        }
+
+        queue.pop();
     }
 }
 
