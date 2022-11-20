@@ -4,17 +4,17 @@
 #include <type_traits>
 
 template <typename T>
-struct PairListType
+struct PairQueueListType
 {
     using Type = T;
-    using Cont = custom_containers::List<T>;
+    using Cont = custom_containers::QueueList<T>;
 };
 
 template <typename T>
-struct PairStackType
+struct PairQueueStackType
 {
     using Type = T;
-    using Cont = custom_containers::Stack<T>;
+    using Cont = custom_containers::QueueStack<T>;
 };
 
 template <typename T>
@@ -22,10 +22,10 @@ class QueueFixture : public ::testing::Test
 {
 public:
     using ValueType = typename T::Type;
-    using ContType = typename T::Cont;
+    using QueueType = typename T::Cont;
 
-    custom_containers::Queue<ValueType, ContType> queue;
-    custom_containers::Queue<ValueType, ContType> queue2;
+    QueueType queue;
+    QueueType queue2;
 
     constexpr static size_t VALUES_SIZE = 6;
 
@@ -35,12 +35,12 @@ public:
 };
 
 
-using TestedTypes = ::testing::Types<PairListType<bool>, PairListType<uint8_t>, PairListType<uint16_t>, PairListType<uint32_t>, PairListType<uint64_t>,
-                                     PairListType<int8_t>, PairListType<int16_t>, PairListType<int32_t>, PairListType<int64_t>,
-                                     PairListType<float>, PairListType<double>,
-                                     PairStackType<bool>, PairStackType<uint8_t>, PairStackType<uint16_t>, PairStackType<uint32_t>, PairStackType<uint64_t>,
-                                     PairStackType<int8_t>, PairStackType<int16_t>, PairStackType<int32_t>, PairStackType<int64_t>,
-                                     PairStackType<float>, PairStackType<double>>;
+using TestedTypes = ::testing::Types<PairQueueListType<bool>,    PairQueueListType<uint8_t>, PairQueueListType<uint16_t>, PairQueueListType<uint32_t>,
+                                     PairQueueListType<uint64_t>,PairQueueListType<int8_t>,  PairQueueListType<int16_t>, PairQueueListType<int32_t>,
+                                     PairQueueListType<int64_t>, PairQueueListType<float>,   PairQueueListType<double>,
+                                     PairQueueStackType<bool>,   PairQueueStackType<uint8_t>, PairQueueStackType<uint16_t>, PairQueueStackType<uint32_t>,
+                                     PairQueueStackType<uint64_t>,PairQueueStackType<int8_t>, PairQueueStackType<int16_t>, PairQueueStackType<int32_t>,
+                                     PairQueueStackType<int64_t>, PairQueueStackType<float>,  PairQueueStackType<double>>;
 
 TYPED_TEST_SUITE(QueueFixture, TestedTypes);
 
@@ -96,7 +96,7 @@ TYPED_TEST(QueueFixture, copyCtor)
         this->queue.push(this->values[i]);
     }
 
-    custom_containers::Queue<typename TestFixture::ValueType, typename TestFixture::ContType> to_copy_to{this->queue};
+    typename TestFixture::QueueType to_copy_to{this->queue};
 
     EXPECT_EQ(this->queue == to_copy_to, true);
 
@@ -137,7 +137,7 @@ TYPED_TEST(QueueFixture, Front)
     front2 = this->values.front();
 
     if(std::is_same_v<bool, typename TestFixture::ValueType> &&
-       !std::is_same_v<custom_containers::List<bool>, typename TestFixture::ContType>)
+       !std::is_same_v<custom_containers::QueueList<bool>, typename TestFixture::QueueType>)
     {
         EXPECT_EQ(this->queue == this->queue2, true);
     }
@@ -163,7 +163,7 @@ TYPED_TEST(QueueFixture, Back)
     back2 = this->values.back();
 
     if(std::is_same_v<bool, typename TestFixture::ValueType> &&
-       !std::is_same_v<custom_containers::List<bool>, typename TestFixture::ContType>)
+       !std::is_same_v<custom_containers::QueueList<bool>, typename TestFixture::QueueType>)
     {
         EXPECT_EQ(this->queue == this->queue2, true);
     }
@@ -181,7 +181,7 @@ TYPED_TEST(QueueFixture, moveCtor)
         this->queue2.push(this->values[i]);
     }
 
-    custom_containers::Queue<typename TestFixture::ValueType, typename TestFixture::ContType> to_move_to{std::move(this->queue)};
+    typename TestFixture::QueueType to_move_to{std::move(this->queue)};
 
     EXPECT_EQ(this->queue2 == to_move_to, true);
 
@@ -198,7 +198,7 @@ TYPED_TEST(QueueFixture, moveAssignOperator)
         this->queue.push(this->values[i]);
     }
 
-    custom_containers::Queue<typename TestFixture::ValueType, typename TestFixture::ContType> to_move{this->queue};
+    typename TestFixture::QueueType to_move{this->queue};
 
     this->queue2 = std::move(to_move);
 

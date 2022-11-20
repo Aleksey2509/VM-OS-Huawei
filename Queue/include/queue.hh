@@ -7,17 +7,37 @@
 namespace custom_containers
 {
 
-template <typename T, typename Container = custom_containers::List<T>>
-class Queue
+template <typename T>
+struct IQueue
+{
+    #if 0
+    virtual const T& front () const& = 0;
+    virtual const T& back () const& = 0;
+
+    virtual T& front () & = 0;
+    virtual T& back () & = 0;
+    #endif
+
+    virtual bool empty() const = 0;
+    virtual size_t size() const = 0;
+
+    virtual void push(const T& elem) = 0;
+    virtual void pop() = 0;
+
+    virtual ~IQueue(){}
+};
+
+template <typename T>
+class QueueList : public IQueue<T>
 {
 
-    Container cont_;
+    custom_containers::List<T> list_;
 
 public:
 
-    Queue() = default;
-    Queue(const Queue& other) = default;
-    Queue(Queue&& other) = default;
+    QueueList() = default;
+    QueueList(const QueueList& other) = default;
+    QueueList(QueueList&& other) = default;
 
     const T& front () const&;
     const T& back () const&;
@@ -25,35 +45,33 @@ public:
     T& front () &;
     T& back () &;
 
-    bool empty() const;
-    size_t size() const;
+    bool empty() const override;
+    size_t size() const override;
 
-    void push(const T& elem);
-    void pop();
+    void push(const T& elem) override;
+    void pop() override;
 
-    Queue& operator=(const Queue& other) = default;
-    Queue& operator=(Queue&& other) noexcept = default;
+    QueueList& operator=(const QueueList& other) = default;
+    QueueList& operator=(QueueList&& other) noexcept = default;
 
-    bool operator==(const Queue& other) const;
-    bool operator!=(const Queue& other) const;
+    bool operator==(const QueueList& other) const;
+    bool operator!=(const QueueList& other) const;
 
-    ~Queue() = default;
+    ~QueueList() = default;
 
 };
 
 template <typename T>
-class Queue<T, custom_containers::Stack<T>>
+class QueueStack : public IQueue<T>
 {
 
     custom_containers::Stack<T> push_stack_;
     custom_containers::Stack<T> pop_stack_;
 
 public:
-    Queue() = default;
-    Queue(const Queue& other) = default;
-    Queue(Queue&& other) = default;
-
-// decltype(push_stack_.Top())
+    QueueStack() = default;
+    QueueStack(const QueueStack& other) = default;
+    QueueStack(QueueStack&& other) = default;
 
     auto front () const& -> decltype(pop_stack_.Top());
     auto back () const& -> decltype(push_stack_.Top());
@@ -61,19 +79,19 @@ public:
     auto front () & -> decltype(pop_stack_.Top());
     auto back () & -> decltype(push_stack_.Top());
 
-    bool empty();
-    size_t size();
+    bool empty() const override;
+    size_t size() const override;
 
-    void push(const T& elem);
-    void pop();
+    void push(const T& elem) override;
+    void pop() override;
 
-    Queue& operator=(const Queue& other) = default;
-    Queue& operator=(Queue&& other) noexcept = default;
+    QueueStack& operator=(const QueueStack& other) = default;
+    QueueStack& operator=(QueueStack&& other) noexcept = default;
 
-    bool operator==(const Queue& other) const;
-    bool operator!=(const Queue& other) const;
+    bool operator==(const QueueStack& other) const;
+    bool operator!=(const QueueStack& other) const;
 
-    ~Queue() = default;
+    ~QueueStack() = default;
 
 private:
 
@@ -81,69 +99,69 @@ private:
 
 };
 
-template <typename T, typename Container>
-const T& Queue<T, Container>::front () const&
+template <typename T>
+const T& QueueList<T>::front () const&
 {
-    return cont_.front();
-}
-
-template <typename T, typename Container>
-const T& Queue<T, Container>::back () const&
-{
-    return cont_.back();
-}
-
-template <typename T, typename Container>
-T& Queue<T, Container>::front () &
-{
-    return cont_.front();
-}
-
-template <typename T, typename Container>
-T& Queue<T, Container>::back () &
-{
-    return cont_.back();
-}
-
-
-template <typename T, typename Container>
-bool Queue<T, Container>::empty() const
-{
-    return cont_.empty();
-}
-
-template <typename T, typename Container>
-size_t Queue<T, Container>::size() const
-{
-    return cont_.size();
-}
-
-template <typename T, typename Container>
-void Queue<T, Container>::push(const T& elem)
-{
-    cont_.push_back(elem);
-}
-
-template <typename T, typename Container>
-void Queue<T, Container>::pop()
-{
-    cont_.pop_front();
-}
-
-template <typename T, typename Container>
-bool Queue<T, Container>::operator==(const Queue& other) const
-{
-    return cont_ == other.cont_;
-}
-
-template <typename T, typename Container>
-bool Queue<T, Container>::operator!=(const Queue& other) const
-{
-    return !(cont_ == other.cont_);
+    return list_.front();
 }
 
 template <typename T>
-void Queue<T, custom_containers::Stack<T>>::MoveFromPushToPop()
+const T& QueueList<T>::back () const&
+{
+    return list_.back();
+}
+
+template <typename T>
+T& QueueList<T>::front () &
+{
+    return list_.front();
+}
+
+template <typename T>
+T& QueueList<T>::back () &
+{
+    return list_.back();
+}
+
+
+template <typename T>
+bool QueueList<T>::empty() const
+{
+    return list_.empty();
+}
+
+template <typename T>
+size_t QueueList<T>::size() const
+{
+    return list_.size();
+}
+
+template <typename T>
+void QueueList<T>::push(const T& elem)
+{
+    list_.push_back(elem);
+}
+
+template <typename T>
+void QueueList<T>::pop()
+{
+    list_.pop_front();
+}
+
+template <typename T>
+bool QueueList<T>::operator==(const QueueList& other) const
+{
+    return list_ == other.list_;
+}
+
+template <typename T>
+bool QueueList<T>::operator!=(const QueueList& other) const
+{
+    return !(list_ == other.list_);
+}
+
+template <typename T>
+void QueueStack<T>::MoveFromPushToPop()
 {
     // we have to preserve the last element of push_stack_ in push_stack_ for correct work of back()
 
@@ -162,7 +180,7 @@ void Queue<T, custom_containers::Stack<T>>::MoveFromPushToPop()
 }
 
 template <typename T>
-auto Queue<T, custom_containers::Stack<T>>::front () const& -> decltype(pop_stack_.Top())
+auto QueueStack<T>::front () const& -> decltype(pop_stack_.Top())
     {
         if (pop_stack_.Empty() && (push_stack_.Size() == 1))
             return push_stack_.Top();
@@ -174,13 +192,13 @@ auto Queue<T, custom_containers::Stack<T>>::front () const& -> decltype(pop_stac
     }
 
 template <typename T>
-auto Queue<T, custom_containers::Stack<T>>::back () const& -> decltype(push_stack_.Top())
+auto QueueStack<T>::back () const& -> decltype(push_stack_.Top())
 {
     return push_stack_.Top();
 }
 
 template <typename T>
-auto Queue<T, custom_containers::Stack<T>>::front () & -> decltype(pop_stack_.Top())
+auto QueueStack<T>::front () & -> decltype(pop_stack_.Top())
     {
         if ((pop_stack_.Empty()) && (push_stack_.Size() == 1))
             return push_stack_.Top();
@@ -192,31 +210,31 @@ auto Queue<T, custom_containers::Stack<T>>::front () & -> decltype(pop_stack_.To
     }
 
 template <typename T>
-auto Queue<T, custom_containers::Stack<T>>::back () & -> decltype(push_stack_.Top())
+auto QueueStack<T>::back () & -> decltype(push_stack_.Top())
     {
         return push_stack_.Top();
     }
 
 template <typename T>
-bool Queue<T, custom_containers::Stack<T>>::empty()
+bool QueueStack<T>::empty() const
 {
     return pop_stack_.Empty() && push_stack_.Empty();
 }
 
 template <typename T>
-size_t Queue<T, custom_containers::Stack<T>>::size()
+size_t QueueStack<T>::size() const
 {
     return pop_stack_.Size() + push_stack_.Size();
 }
 
 template <typename T>
-void Queue<T, custom_containers::Stack<T>>::push(const T& elem)
+void QueueStack<T>::push(const T& elem)
 {
     push_stack_.Push(elem);
 }
 
 template <typename T>
-void Queue<T, custom_containers::Stack<T>>::pop()
+void QueueStack<T>::pop()
 {
     if (pop_stack_.Empty() && (push_stack_.Size() == 1))
     {
@@ -231,13 +249,13 @@ void Queue<T, custom_containers::Stack<T>>::pop()
 }
 
 template <typename T>
-bool Queue<T, custom_containers::Stack<T>>::operator==(const Queue& other) const
+bool QueueStack<T>::operator==(const QueueStack& other) const
 {
     return (pop_stack_ == other.pop_stack_) && (push_stack_ == other.push_stack_);
 }
 
 template <typename T>
-bool Queue<T, custom_containers::Stack<T>>::operator!=(const Queue& other) const
+bool QueueStack<T>::operator!=(const QueueStack& other) const
 {
     return !(*this == other);
 }
