@@ -5,6 +5,8 @@ project(queue VERSION 0.5)
 find_package(GTest REQUIRED)
 include_directories(${GTEST_INCLUDE_DIRECTORIES})
 
+find_package(benchmark REQUIRED)
+
 enable_language(CXX)
 
 set(CMAKE_CXX_STANDARD 17)
@@ -22,4 +24,5 @@ target_link_libraries(Queue INTERFACE Stack)
 add_subdirectory(list)
 add_subdirectory(stack)
 add_subdirectory(tests)
+add_subdirectory(benchmark)
 add_dependencies(Queue Stack List)
