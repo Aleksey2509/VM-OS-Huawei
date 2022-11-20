@@ -61,8 +61,8 @@ public:
     auto front () & -> decltype(pop_stack_.Top());
     auto back () & -> decltype(push_stack_.Top());
 
-    bool empty();
-    size_t size();
+    bool empty() const;
+    size_t size() const;
 
     void push(const T& elem);
     void pop();
@@ -198,13 +198,13 @@ auto Queue<T, custom_containers::Stack<T>>::back () & -> decltype(push_stack_.To
     }
 
 template <typename T>
-bool Queue<T, custom_containers::Stack<T>>::empty()
+bool Queue<T, custom_containers::Stack<T>>::empty() const
 {
     return pop_stack_.Empty() && push_stack_.Empty();
 }
 
 template <typename T>
-size_t Queue<T, custom_containers::Stack<T>>::size()
+size_t Queue<T, custom_containers::Stack<T>>::size() const
 {
     return pop_stack_.Size() + push_stack_.Size();
 }
