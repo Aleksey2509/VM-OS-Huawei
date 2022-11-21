@@ -16,6 +16,8 @@ add_executable(${QUEUE_TEST_EXEC})
 
 compile_test(${QUEUE_TEST_EXEC} ${QUEUE_TEST_SRC})
 
+enable_testing()
+
 add_custom_target(test_queue
 COMMENT "Running tests"
 COMMAND ./${QUEUE_TEST_EXEC})

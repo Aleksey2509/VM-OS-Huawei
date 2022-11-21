@@ -28,20 +28,20 @@ public:
     List(const List& other);
     List(List&& other) noexcept;
 
-    const T& front() const&;
-    const T& back() const&;
+    const T& Front() const&;
+    const T& Back() const&;
 
-    T& front () &;
-    T& back () &;
+    T& Front () &;
+    T& Back () &;
 
-    bool empty() const;
-    size_t size() const;
+    bool Empty() const;
+    size_t Size() const;
 
-    void push_front(const T& elem);
-    void push_back(const T& elem);
+    void PushFront(const T& elem);
+    void PushBack(const T& elem);
 
-    void pop_front();
-    void pop_back();
+    void PopFront();
+    void PopBack();
 
     List& operator=(const List& other);
     List& operator=(List&& other) noexcept;
@@ -52,8 +52,8 @@ public:
     ~List();
 
 private:
-    void push_empty(const T& elem);
-    void pop_last();
+    void PushEmpty(const T& elem);
+    void PopLast();
 };
 
 template <typename T>
@@ -67,13 +67,13 @@ List<T>::List(const List& other) : size_(other.size_)
 
     back_ = front_;
 
-    for(auto other_it = other.front_->next; other_it; other_it = other_it->next)
+    for(auto other_iter = other.front_->next; other_iter; other_iter = other_iter->next)
     {
         back_->next = new Node;
         back_->next->prev = back_;
         back_ = back_->next;
 
-        back_->data = other_it->data;
+        back_->data = other_iter->data;
     }
 
 }
@@ -86,58 +86,56 @@ List<T>::List(List&& other) noexcept
 }
 
 template <typename T>
-T& List<T>::front () &
+T& List<T>::Front() &
 {
     return front_->data;
 }
 
 template <typename T>
-const T& List<T>::front() const&
+const T& List<T>::Front() const&
 {
     return front_->data;
 }
 
 template <typename T>
-T& List<T>::back () &
+T& List<T>::Back () &
 {
     return back_->data;
 }
 
 template <typename T>
-const T& List<T>::back() const&
+const T& List<T>::Back() const&
 {
     return back_->data;
 }
 
 template <typename T>
-bool List<T>::empty() const
+bool List<T>::Empty() const
 {
     return size_ == 0;
 }
 
 template <typename T>
-size_t List<T>::size() const
+size_t List<T>::Size() const
 {
     return size_;
 }
 
 template <typename T>
-void List<T>::push_empty(const T& elem)
+void List<T>::PushEmpty(const T& elem)
 {
     front_ = new Node;
     front_->data = elem;
     back_ = front_;
     size_++;
-
-    return;
 }
 
 template <typename T>
-void List<T>::push_front(const T& elem)
+void List<T>::PushFront(const T& elem)
 {
-    if (empty())
+    if (Empty())
     {
-        push_empty(elem);
+        PushEmpty(elem);
         return;
     }
 
@@ -151,11 +149,11 @@ void List<T>::push_front(const T& elem)
 
 // debug me
 template <typename T>
-void List<T>::push_back(const T& elem)
+void List<T>::PushBack(const T& elem)
 {
-    if (empty())
+    if (Empty())
     {
-        push_empty(elem);
+        PushEmpty(elem);
         return;
     }
 
@@ -168,22 +166,20 @@ void List<T>::push_back(const T& elem)
 }
 
 template <typename T>
-void List<T>::pop_last()
+void List<T>::PopLast()
 {
     delete front_;
     front_ = nullptr;
     back_ = nullptr;
     size_--;
-
-    return;
 }
 
 template <typename T>
-void List<T>::pop_front()
+void List<T>::PopFront()
 {
     if (size_ == 1)
     {
-        pop_last();
+        PopLast();
         return;
     }
 
@@ -191,16 +187,14 @@ void List<T>::pop_front()
     delete front_->prev;
     front_->prev = nullptr;
     size_--;
-
-    return;
 }
 
 template <typename T>
-void List<T>::pop_back()
+void List<T>::PopBack()
 {
     if (size_ == 1)
     {
-        pop_last();
+        PopLast();
         return;
     }
 
@@ -208,13 +202,16 @@ void List<T>::pop_back()
     delete back_->next;
     back_->next = nullptr;
     size_--;
-
-    return;
 }
 
 template <typename T>
 List<T>& List<T>::operator=(const List& other)
 {
+    if (this == std::addressof(other))
+    {
+        return *this;
+    }
+
     List tmp{other};
     std::swap(this->front_, tmp.front_);
     std::swap(this->back_, tmp.back_);
@@ -237,14 +234,18 @@ template<typename T>
 bool List<T>::operator==(const List& other) const
 {
     if (size_ != other.size_)
-        return false;
-
-    auto it = front_;
-    auto other_it = other.front_;
-    for (; it; it = it->next, other_it = other_it->next)
     {
-        if (it->data != other_it->data)
+        return false;
+    }
+
+    auto iter = front_;
+    auto other_iter = other.front_;
+    for (; iter; iter = iter->next, other_iter = other_iter->next)
+    {
+        if (iter->data != other_iter->data)
+        {
             return false;
+        }
     }
 
     return true;

@@ -16,6 +16,8 @@ add_executable(${STACK_TEST_EXEC})
 
 compile_test(${STACK_TEST_EXEC} ${STACK_TEST_SRC})
 
+enable_testing()
+
 add_custom_target(test_stack
 		  COMMENT "Running tests"
 		  COMMAND ./${STACK_TEST_EXEC})

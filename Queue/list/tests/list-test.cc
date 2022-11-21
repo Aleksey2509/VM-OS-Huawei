@@ -28,8 +28,8 @@ TYPED_TEST_SUITE(ListFixture, TestedTypes);
 
 TYPED_TEST(ListFixture, ListDefaultCtor)
 {
-    ASSERT_EQ(this->lst.size(), 0);
-    ASSERT_EQ(this->lst.empty(), true);
+    ASSERT_EQ(this->lst.Size(), 0);
+    ASSERT_EQ(this->lst.Empty(), true);
 }
 
 
@@ -37,59 +37,59 @@ TYPED_TEST(ListFixture, ListPushBackPopFront)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->lst.push_back(this->values[i]);
-        EXPECT_EQ(this->lst.size(), i + 1);
-        EXPECT_EQ(this->lst.back(), this->values[i]);
-        EXPECT_EQ(this->lst.front(), this->values[0]);
+        this->lst.PushBack(this->values[i]);
+        EXPECT_EQ(this->lst.Size(), i + 1);
+        EXPECT_EQ(this->lst.Back(), this->values[i]);
+        EXPECT_EQ(this->lst.Front(), this->values[0]);
     }
     
 
     for (size_t i = 0; i < this->values.size() - 1; ++i)
     {
-        this->lst.pop_front();
-        EXPECT_EQ(this->lst.size(), this->values.size() - i - 1);
-        EXPECT_EQ(this->lst.back(), this->values[this->values.size() - 1]);
-        EXPECT_EQ(this->lst.front(), this->values[i + 1]);
+        this->lst.PopFront();
+        EXPECT_EQ(this->lst.Size(), this->values.size() - i - 1);
+        EXPECT_EQ(this->lst.Back(), this->values[this->values.size() - 1]);
+        EXPECT_EQ(this->lst.Front(), this->values[i + 1]);
     }
 
-    this->lst.pop_front();
-    EXPECT_EQ(this->lst.size(), 0);
+    this->lst.PopFront();
+    EXPECT_EQ(this->lst.Size(), 0);
 }
 
 TYPED_TEST(ListFixture, ListPushFrontPopBack)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->lst.push_front(this->values[i]);
-        EXPECT_EQ(this->lst.size(), i + 1);
-        EXPECT_EQ(this->lst.front(), this->values[i]);
-        EXPECT_EQ(this->lst.back(), this->values[0]);
+        this->lst.PushFront(this->values[i]);
+        EXPECT_EQ(this->lst.Size(), i + 1);
+        EXPECT_EQ(this->lst.Front(), this->values[i]);
+        EXPECT_EQ(this->lst.Back(), this->values[0]);
     }
     
 
     for (size_t i = 0; i < this->values.size() - 1; ++i)
     {
-        this->lst.pop_back();
-        EXPECT_EQ(this->lst.size(), this->values.size() - i - 1);
-        EXPECT_EQ(this->lst.back(), this->values[i + 1]);
-        EXPECT_EQ(this->lst.front(), this->values[this->values.size() - 1]);
+        this->lst.PopBack();
+        EXPECT_EQ(this->lst.Size(), this->values.size() - i - 1);
+        EXPECT_EQ(this->lst.Back(), this->values[i + 1]);
+        EXPECT_EQ(this->lst.Front(), this->values[this->values.size() - 1]);
     }
 
-    this->lst.pop_back();
-    EXPECT_EQ(this->lst.size(), 0);
+    this->lst.PopBack();
+    EXPECT_EQ(this->lst.Size(), 0);
 }
 
 TYPED_TEST(ListFixture, equalityOperator)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->lst.push_front(this->values[i]);
-        this->lst2.push_front(this->values[i]);
+        this->lst.PushFront(this->values[i]);
+        this->lst2.PushFront(this->values[i]);
     }
 
     EXPECT_EQ(this->lst == this->lst2, true);
 
-    this->lst.pop_back();
+    this->lst.PopBack();
 
     EXPECT_EQ(this->lst != this->lst2, true);
 
@@ -99,14 +99,14 @@ TYPED_TEST(ListFixture, copyCtor)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->lst.push_front(this->values[i]);
+        this->lst.PushFront(this->values[i]);
     }
 
-    custom_containers::List<typename TestFixture::ValueType> to_copy_to{this->lst};
+    const custom_containers::List<typename TestFixture::ValueType> to_copy_to{this->lst};
 
     EXPECT_EQ(this->lst == to_copy_to, true);
 
-    this->lst.pop_back();
+    this->lst.PopBack();
 
     EXPECT_EQ(this->lst != to_copy_to, true);
 }
@@ -115,14 +115,14 @@ TYPED_TEST(ListFixture, copyAssignOperator)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->lst.push_front(this->values[i]);
+        this->lst.PushFront(this->values[i]);
     }
 
     this->lst2 = this->lst;
 
     EXPECT_EQ(this->lst == this->lst2, true);
 
-    this->lst.pop_back();
+    this->lst.PopBack();
 
     EXPECT_EQ(this->lst != this->lst2, true);
 }
@@ -131,15 +131,15 @@ TYPED_TEST(ListFixture, moveCtor)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->lst.push_front(this->values[i]);
-        this->lst2.push_front(this->values[i]);
+        this->lst.PushFront(this->values[i]);
+        this->lst2.PushFront(this->values[i]);
     }
 
-    custom_containers::List<typename TestFixture::ValueType> to_move_to{std::move(this->lst)};
+    const custom_containers::List<typename TestFixture::ValueType> to_move_to{std::move(this->lst)};
 
     EXPECT_EQ(this->lst2 == to_move_to, true);
 
-    this->lst2.pop_back();
+    this->lst2.PopBack();
 
     EXPECT_EQ(this->lst2 != to_move_to, true);
 }
@@ -148,16 +148,16 @@ TYPED_TEST(ListFixture, moveAssignOperator)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->lst.push_front(this->values[i]);
+        this->lst.PushFront(this->values[i]);
     }
 
-    custom_containers::List<typename TestFixture::ValueType> to_move{this->lst};
+    const custom_containers::List<typename TestFixture::ValueType> to_move{this->lst};
 
     this->lst2 = std::move(to_move);
 
     EXPECT_EQ(this->lst == this->lst2, true);
 
-    this->lst.pop_back();
+    this->lst.PopBack();
 
     EXPECT_EQ(this->lst != this->lst2, true);
 }
@@ -166,13 +166,13 @@ TYPED_TEST(ListFixture, Front)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->lst.push_front(this->values[i]);
-        this->lst2.push_front(this->values[i]);
+        this->lst.PushFront(this->values[i]);
+        this->lst2.PushFront(this->values[i]);
     }
 
     ASSERT_EQ(this->lst == this->lst2, true);
 
-    auto&& front = this->lst.front();
+    auto&& front = this->lst.Front();
     front = this->values.front();
 
     EXPECT_EQ(this->lst == this->lst2, false);
@@ -182,13 +182,13 @@ TYPED_TEST(ListFixture, Back)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->lst.push_front(this->values[i]);
-        this->lst2.push_front(this->values[i]);
+        this->lst.PushFront(this->values[i]);
+        this->lst2.PushFront(this->values[i]);
     }
 
     ASSERT_EQ(this->lst == this->lst2, true);
 
-    auto&& back = this->lst.back();
+    auto&& back = this->lst.Back();
     back = this->values.back();
 
     EXPECT_EQ(this->lst == this->lst2, false);

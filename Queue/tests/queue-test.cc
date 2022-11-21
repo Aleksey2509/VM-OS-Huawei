@@ -46,44 +46,44 @@ TYPED_TEST_SUITE(QueueFixture, TestedTypes);
 
 TYPED_TEST(QueueFixture, QueueDefaultCtor)
 {
-    ASSERT_EQ(this->queue.size(), 0);
-    ASSERT_EQ(this->queue.empty(), true);
+    ASSERT_EQ(this->queue.Size(), 0);
+    ASSERT_EQ(this->queue.Empty(), true);
 }
 
 TYPED_TEST(QueueFixture, QueuePushBackPopFront)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->queue.push(this->values[i]);
-        EXPECT_EQ(this->queue.size(), i + 1);
-        EXPECT_EQ(this->queue.back(), this->values[i]);
-        EXPECT_EQ(this->queue.front(), this->values[0]);
+        this->queue.Push(this->values[i]);
+        EXPECT_EQ(this->queue.Size(), i + 1);
+        EXPECT_EQ(this->queue.Back(), this->values[i]);
+        EXPECT_EQ(this->queue.Front(), this->values[0]);
     }
     
 
     for (size_t i = 0; i < this->values.size() - 1; ++i)
     {
-        this->queue.pop();
-        EXPECT_EQ(this->queue.size(), this->values.size() - i - 1);
-        EXPECT_EQ(this->queue.back(), this->values[this->values.size() - 1]);
-        EXPECT_EQ(this->queue.front(), this->values[i + 1]);
+        this->queue.Pop();
+        EXPECT_EQ(this->queue.Size(), this->values.size() - i - 1);
+        EXPECT_EQ(this->queue.Back(), this->values[this->values.size() - 1]);
+        EXPECT_EQ(this->queue.Front(), this->values[i + 1]);
     }
 
-    this->queue.pop();
-    EXPECT_EQ(this->queue.size(), 0);
+    this->queue.Pop();
+    EXPECT_EQ(this->queue.Size(), 0);
 }
 
 TYPED_TEST(QueueFixture, equalityOperator)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->queue.push(this->values[i]);
-        this->queue2.push(this->values[i]);
+        this->queue.Push(this->values[i]);
+        this->queue2.Push(this->values[i]);
     }
 
     EXPECT_EQ(this->queue == this->queue2, true);
 
-    this->queue.pop();
+    this->queue.Pop();
 
     EXPECT_EQ(this->queue != this->queue2, true);
 
@@ -93,14 +93,14 @@ TYPED_TEST(QueueFixture, copyCtor)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->queue.push(this->values[i]);
+        this->queue.Push(this->values[i]);
     }
 
-    typename TestFixture::QueueType to_copy_to{this->queue};
+    const typename TestFixture::QueueType to_copy_to{this->queue};
 
     EXPECT_EQ(this->queue == to_copy_to, true);
 
-    this->queue.pop();
+    this->queue.Pop();
 
     EXPECT_EQ(this->queue != to_copy_to, true);
 }
@@ -109,14 +109,14 @@ TYPED_TEST(QueueFixture, copyAssignOperator)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->queue.push(this->values[i]);
+        this->queue.Push(this->values[i]);
     }
 
     this->queue2 = this->queue;
 
     EXPECT_EQ(this->queue == this->queue2, true);
 
-    this->queue.pop();
+    this->queue.Pop();
 
     EXPECT_EQ(this->queue != this->queue2, true);
 }
@@ -125,19 +125,19 @@ TYPED_TEST(QueueFixture, Front)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->queue.push(this->values[i]);
-        this->queue2.push(this->values[i]);
+        this->queue.Push(this->values[i]);
+        this->queue2.Push(this->values[i]);
     }
 
     ASSERT_EQ(this->queue == this->queue2, true);
 
-    auto&& front = this->queue.front();
-    auto&& front2 = this->queue2.front();
+    auto&& front = this->queue.Front();
+    auto&& front2 = this->queue2.Front();
     front = this->values.back();
     front2 = this->values.front();
 
-    if(std::is_same_v<bool, typename TestFixture::ValueType> &&
-       !std::is_same_v<custom_containers::QueueList<bool>, typename TestFixture::QueueType>)
+    if(std::is_same<bool, typename TestFixture::ValueType>::value &&
+       std::is_same<custom_containers::QueueStack<bool>, typename TestFixture::QueueType>::value)
     {
         EXPECT_EQ(this->queue == this->queue2, true);
     }
@@ -151,19 +151,19 @@ TYPED_TEST(QueueFixture, Back)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->queue.push(this->values[i]);
-        this->queue2.push(this->values[i]);
+        this->queue.Push(this->values[i]);
+        this->queue2.Push(this->values[i]);
     }
 
     ASSERT_EQ(this->queue == this->queue2, true);
 
-    auto&& back = this->queue.back();
-    auto&& back2 = this->queue2.back();
+    auto&& back = this->queue.Back();
+    auto&& back2 = this->queue2.Back();
     back = this->values.front();
     back2 = this->values.back();
 
-    if(std::is_same_v<bool, typename TestFixture::ValueType> &&
-       !std::is_same_v<custom_containers::QueueList<bool>, typename TestFixture::QueueType>)
+    if(std::is_same<bool, typename TestFixture::ValueType>::value &&
+       std::is_same<custom_containers::QueueStack<bool>, typename TestFixture::QueueType>::value)
     {
         EXPECT_EQ(this->queue == this->queue2, true);
     }
@@ -177,15 +177,15 @@ TYPED_TEST(QueueFixture, moveCtor)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->queue.push(this->values[i]);
-        this->queue2.push(this->values[i]);
+        this->queue.Push(this->values[i]);
+        this->queue2.Push(this->values[i]);
     }
 
-    typename TestFixture::QueueType to_move_to{std::move(this->queue)};
+    const typename TestFixture::QueueType to_move_to{std::move(this->queue)};
 
     EXPECT_EQ(this->queue2 == to_move_to, true);
 
-    this->queue2.pop();
+    this->queue2.Pop();
 
 
     EXPECT_EQ(this->queue2 != to_move_to, true);
@@ -195,7 +195,7 @@ TYPED_TEST(QueueFixture, moveAssignOperator)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
     {
-        this->queue.push(this->values[i]);
+        this->queue.Push(this->values[i]);
     }
 
     typename TestFixture::QueueType to_move{this->queue};
@@ -204,7 +204,7 @@ TYPED_TEST(QueueFixture, moveAssignOperator)
 
     EXPECT_EQ(this->queue == this->queue2, true);
 
-    this->queue.pop();
+    this->queue.Pop();
 
     EXPECT_EQ(this->queue != this->queue2, true);
 }

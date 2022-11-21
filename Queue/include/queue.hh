@@ -11,18 +11,18 @@ template <typename T>
 struct IQueue
 {
     #if 0
-    virtual const T& front () const& = 0;
-    virtual const T& back () const& = 0;
+    virtual const T& Front () const& = 0;
+    virtual const T& Back () const& = 0;
 
-    virtual T& front () & = 0;
-    virtual T& back () & = 0;
+    virtual T& Front () & = 0;
+    virtual T& Back () & = 0;
     #endif
 
-    virtual bool empty() const = 0;
-    virtual size_t size() const = 0;
+    virtual bool Empty() const = 0;
+    virtual size_t Size() const = 0;
 
-    virtual void push(const T& elem) = 0;
-    virtual void pop() = 0;
+    virtual void Push(const T& elem) = 0;
+    virtual void Pop() = 0;
 
     virtual ~IQueue(){}
 };
@@ -39,17 +39,17 @@ public:
     QueueList(const QueueList& other) = default;
     QueueList(QueueList&& other) = default;
 
-    const T& front () const&;
-    const T& back () const&;
+    const T& Front () const&;
+    const T& Back () const&;
 
-    T& front () &;
-    T& back () &;
+    T& Front () &;
+    T& Back () &;
 
-    bool empty() const override;
-    size_t size() const override;
+    bool Empty() const override;
+    size_t Size() const override;
 
-    void push(const T& elem) override;
-    void pop() override;
+    void Push(const T& elem) override;
+    void Pop() override;
 
     QueueList& operator=(const QueueList& other) = default;
     QueueList& operator=(QueueList&& other) noexcept = default;
@@ -73,17 +73,17 @@ public:
     QueueStack(const QueueStack& other) = default;
     QueueStack(QueueStack&& other) = default;
 
-    auto front () const& -> decltype(pop_stack_.Top());
-    auto back () const& -> decltype(push_stack_.Top());
+    auto Front () const& -> decltype(pop_stack_.Top());
+    auto Back () const& -> decltype(push_stack_.Top());
 
-    auto front () & -> decltype(pop_stack_.Top());
-    auto back () & -> decltype(push_stack_.Top());
+    auto Front () & -> decltype(pop_stack_.Top());
+    auto Back () & -> decltype(push_stack_.Top());
 
-    bool empty() const override;
-    size_t size() const override;
+    bool Empty() const override;
+    size_t Size() const override;
 
-    void push(const T& elem) override;
-    void pop() override;
+    void Push(const T& elem) override;
+    void Pop() override;
 
     QueueStack& operator=(const QueueStack& other) = default;
     QueueStack& operator=(QueueStack&& other) noexcept = default;
@@ -100,52 +100,52 @@ private:
 };
 
 template <typename T>
-const T& QueueList<T>::front () const&
+const T& QueueList<T>::Front () const&
 {
-    return list_.front();
+    return list_.Front();
 }
 
 template <typename T>
-const T& QueueList<T>::back () const&
+const T& QueueList<T>::Back () const&
 {
-    return list_.back();
+    return list_.Back();
 }
 
 template <typename T>
-T& QueueList<T>::front () &
+T& QueueList<T>::Front () &
 {
-    return list_.front();
+    return list_.Front();
 }
 
 template <typename T>
-T& QueueList<T>::back () &
+T& QueueList<T>::Back () &
 {
-    return list_.back();
+    return list_.Back();
 }
 
 
 template <typename T>
-bool QueueList<T>::empty() const
+bool QueueList<T>::Empty() const
 {
-    return list_.empty();
+    return list_.Empty();
 }
 
 template <typename T>
-size_t QueueList<T>::size() const
+size_t QueueList<T>::Size() const
 {
-    return list_.size();
+    return list_.Size();
 }
 
 template <typename T>
-void QueueList<T>::push(const T& elem)
+void QueueList<T>::Push(const T& elem)
 {
-    list_.push_back(elem);
+    list_.PushBack(elem);
 }
 
 template <typename T>
-void QueueList<T>::pop()
+void QueueList<T>::Pop()
 {
-    list_.pop_front();
+    list_.PopFront();
 }
 
 template <typename T>
@@ -163,7 +163,7 @@ bool QueueList<T>::operator!=(const QueueList& other) const
 template <typename T>
 void QueueStack<T>::MoveFromPushToPop()
 {
-    // we have to preserve the last element of push_stack_ in push_stack_ for correct work of back()
+    // we have to preserve the last element of push_stack_ in push_stack_ for correct work of Back()
 
     // take it out, so it is not copied to pop_stack_
     auto push_stack_back = push_stack_.Top();
@@ -180,61 +180,69 @@ void QueueStack<T>::MoveFromPushToPop()
 }
 
 template <typename T>
-auto QueueStack<T>::front () const& -> decltype(pop_stack_.Top())
+auto QueueStack<T>::Front () const& -> decltype(pop_stack_.Top())
     {
         if (pop_stack_.Empty() && (push_stack_.Size() == 1))
+        {
             return push_stack_.Top();
+        }
 
         if (pop_stack_.Empty())
+        {
             MoveFromPushToPop();
+        }
         
         return pop_stack_.Top();
     }
 
 template <typename T>
-auto QueueStack<T>::back () const& -> decltype(push_stack_.Top())
+auto QueueStack<T>::Back () const& -> decltype(push_stack_.Top())
 {
     return push_stack_.Top();
 }
 
 template <typename T>
-auto QueueStack<T>::front () & -> decltype(pop_stack_.Top())
+auto QueueStack<T>::Front () & -> decltype(pop_stack_.Top())
     {
         if ((pop_stack_.Empty()) && (push_stack_.Size() == 1))
+        {
             return push_stack_.Top();
+        }
 
         if (pop_stack_.Empty())
+        {
             MoveFromPushToPop();
+        }
         
         return pop_stack_.Top();
     }
 
 template <typename T>
-auto QueueStack<T>::back () & -> decltype(push_stack_.Top())
+auto QueueStack<T>::Back () & -> decltype(push_stack_.Top())
     {
         return push_stack_.Top();
     }
 
 template <typename T>
-bool QueueStack<T>::empty() const
+bool QueueStack<T>::Empty() const
 {
     return pop_stack_.Empty() && push_stack_.Empty();
 }
 
 template <typename T>
-size_t QueueStack<T>::size() const
+size_t QueueStack<T>::Size() const
 {
     return pop_stack_.Size() + push_stack_.Size();
 }
 
 template <typename T>
-void QueueStack<T>::push(const T& elem)
+void QueueStack<T>::Push(const T& elem)
 {
     push_stack_.Push(elem);
 }
 
 template <typename T>
-void QueueStack<T>::pop()
+void QueueStack<T>::Pop()
 {
     if (pop_stack_.Empty() && (push_stack_.Size() == 1))
     {
@@ -243,7 +251,9 @@ void QueueStack<T>::pop()
     }
 
     if (pop_stack_.Empty())
+    {
         MoveFromPushToPop();
+    }
 
     pop_stack_.Pop();
 }
