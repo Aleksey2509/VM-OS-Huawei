@@ -3,11 +3,9 @@
 #include <vector>
 
 constexpr size_t RANGE_MULTIPLIER = 2;
-constexpr size_t RANGE_START = 1 << 17;
-constexpr size_t RANGE_FINISH = 1 << 20;
 
-constexpr size_t HEAVY_RANGE_START = 1 << 12;
-constexpr size_t HEAVY_RANGE_FINISH = 1 << 15;
+constexpr size_t HEAVY_RANGE_START = 1 << 11;
+constexpr size_t HEAVY_RANGE_FINISH = 1 << 14;
 
 template <typename T>
 struct PairQueueListType
@@ -29,11 +27,11 @@ static void QueueHeavyPushing(benchmark::State& state)
     using TestType = typename PairContType::Type;
     using QueueType = typename PairContType::QueueType;
 
-    const size_t push_vec_size = 1e3;
-    const size_t assign_vec_size = 1e3;
+    const size_t push_vec_size = 1e2;
+    const size_t assign_vec_size = 1e2;
 
-    const std::vector<double> to_push(push_vec_size);
-    const std::vector<double> to_assign(assign_vec_size);
+    const std::list<double> to_push(push_vec_size);
+    const std::list<double> to_assign(assign_vec_size);
 
     for (auto _ : state) // NOLINT
     {
@@ -60,11 +58,11 @@ static void QueueHeavyPushing(benchmark::State& state)
     }
 }
 
-BENCHMARK(QueueHeavyPushing<PairQueueListType<std::vector<double>>>)
+BENCHMARK(QueueHeavyPushing<PairQueueListType<std::list<double>>>)
     ->RangeMultiplier(RANGE_MULTIPLIER)->Range(HEAVY_RANGE_START, HEAVY_RANGE_FINISH)
     ->Unit(benchmark::kMillisecond);
 
-BENCHMARK(QueueHeavyPushing<PairQueueStackType<std::vector<double>>>)
+BENCHMARK(QueueHeavyPushing<PairQueueStackType<std::list<double>>>)
     ->RangeMultiplier(RANGE_MULTIPLIER)->Range(HEAVY_RANGE_START, HEAVY_RANGE_FINISH)
     ->Unit(benchmark::kMillisecond);
 

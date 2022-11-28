@@ -6,9 +6,6 @@ constexpr size_t RANGE_MULTIPLIER = 2;
 constexpr size_t RANGE_START = 1 << 17;
 constexpr size_t RANGE_FINISH = 1 << 20;
 
-constexpr size_t HEAVY_RANGE_START = 1 << 12;
-constexpr size_t HEAVY_RANGE_FINISH = 1 << 15;
-
 template <typename T>
 struct PairQueueListType
 {
