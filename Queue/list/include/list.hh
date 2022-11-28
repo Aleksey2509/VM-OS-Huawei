@@ -147,7 +147,6 @@ void List<T>::PushFront(const T& elem)
     size_++;
 }
 
-// debug me
 template <typename T>
 void List<T>::PushBack(const T& elem)
 {
