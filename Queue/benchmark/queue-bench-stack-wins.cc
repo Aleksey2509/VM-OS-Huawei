@@ -6,27 +6,9 @@ constexpr size_t RANGE_MULTIPLIER = 2;
 constexpr size_t RANGE_START = 1 << 17;
 constexpr size_t RANGE_FINISH = 1 << 20;
 
-template <typename T>
-struct PairQueueListType
-{
-    using Type = T;
-    using QueueType = custom_containers::QueueList<T>;
-};
-
-template <typename T>
-struct PairQueueStackType
-{
-    using Type = T;
-    using QueueType = custom_containers::QueueStack<T>;
-};
-
-
-template <class PairContType> 
+template <class QueueType> 
 static void QueuePushing(benchmark::State& state)
 {
-    using TestType = typename PairContType::Type;
-    using QueueType = typename PairContType::QueueType;
-
     for (auto _ : state) // NOLINT
     {
         QueueType queue;
@@ -52,11 +34,11 @@ static void QueuePushing(benchmark::State& state)
     }
 }
 
-BENCHMARK(QueuePushing<PairQueueListType<double>>)
+BENCHMARK(QueuePushing<custom_containers::QueueList<double>>)
     ->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_FINISH)
     ->Unit(benchmark::kMillisecond);
 
-BENCHMARK(QueuePushing<PairQueueStackType<double>>)
+BENCHMARK(QueuePushing<custom_containers::QueueStack<double>>)
     ->RangeMultiplier(RANGE_MULTIPLIER)->Range(RANGE_START, RANGE_FINISH)
     ->Unit(benchmark::kMillisecond);
 

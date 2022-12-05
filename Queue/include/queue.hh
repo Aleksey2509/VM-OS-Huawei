@@ -3,6 +3,7 @@
 
 #include "stack.hh"
 #include "list.hh"
+#include <type_traits>
 
 namespace custom_containers
 {
@@ -10,13 +11,8 @@ namespace custom_containers
 template <typename T>
 struct IQueue
 {
-    #if 0
-    virtual const T& Front () const& = 0;
-    virtual const T& Back () const& = 0;
-
     virtual T& Front () & = 0;
     virtual T& Back () & = 0;
-    #endif
 
     virtual bool Empty() const = 0;
     virtual size_t Size() const = 0;
@@ -27,11 +23,28 @@ struct IQueue
     virtual ~IQueue(){}
 };
 
+template<>
+struct IQueue<bool>
+{
+    virtual bool Front () & = 0;
+    virtual bool Back () & = 0;
+
+    virtual bool Empty() const = 0;
+    virtual size_t Size() const = 0;
+
+    virtual void Push(const bool& elem) = 0;
+    virtual void Pop() = 0;
+
+    virtual ~IQueue(){}
+};
+
 template <typename T>
 class QueueList : public IQueue<T>
 {
-
     custom_containers::List<T> list_;
+
+    using ConstFrontReturnType = std::conditional_t<std::is_same_v<T, bool>, bool, const T&>;
+    using FrontReturnType = std::conditional_t<std::is_same_v<T, bool>, bool, T&>;
 
 public:
 
@@ -39,11 +52,11 @@ public:
     QueueList(const QueueList& other) = default;
     QueueList(QueueList&& other) = default;
 
-    const T& Front () const&;
-    const T& Back () const&;
+    ConstFrontReturnType Front () const&;
+    ConstFrontReturnType Back () const&;
 
-    T& Front () &;
-    T& Back () &;
+    FrontReturnType Front () & override;
+    FrontReturnType Back () & override;
 
     bool Empty() const override;
     size_t Size() const override;
@@ -68,16 +81,18 @@ class QueueStack : public IQueue<T>
     custom_containers::Stack<T> push_stack_;
     custom_containers::Stack<T> pop_stack_;
 
+    using ConstFrontReturnType = std::conditional_t<std::is_same_v<T, bool>, decltype(pop_stack_.Top()), const T&>;
+    using FrontReturnType = std::conditional_t<std::is_same_v<T, bool>, decltype(pop_stack_.Top()), T&>;
+
 public:
     QueueStack() = default;
     QueueStack(const QueueStack& other) = default;
     QueueStack(QueueStack&& other) = default;
 
-    auto Front () const& -> decltype(pop_stack_.Top());
-    auto Back () const& -> decltype(push_stack_.Top());
+    ConstFrontReturnType Back () const&;
 
-    auto Front () & -> decltype(pop_stack_.Top());
-    auto Back () & -> decltype(push_stack_.Top());
+    FrontReturnType Front () & override;
+    FrontReturnType Back () & override;
 
     bool Empty() const override;
     size_t Size() const override;
@@ -100,25 +115,25 @@ private:
 };
 
 template <typename T>
-const T& QueueList<T>::Front () const&
+typename QueueList<T>::ConstFrontReturnType QueueList<T>::Front () const&
 {
     return list_.Front();
 }
 
 template <typename T>
-const T& QueueList<T>::Back () const&
+typename QueueList<T>::ConstFrontReturnType QueueList<T>::Back () const&
 {
     return list_.Back();
 }
 
 template <typename T>
-T& QueueList<T>::Front () &
+typename QueueList<T>::FrontReturnType QueueList<T>::Front () &
 {
     return list_.Front();
 }
 
 template <typename T>
-T& QueueList<T>::Back () &
+typename QueueList<T>::FrontReturnType QueueList<T>::Back () &
 {
     return list_.Back();
 }
@@ -180,29 +195,13 @@ void QueueStack<T>::MoveFromPushToPop()
 }
 
 template <typename T>
-auto QueueStack<T>::Front () const& -> decltype(pop_stack_.Top())
-    {
-        if (pop_stack_.Empty() && (push_stack_.Size() == 1))
-        {
-            return push_stack_.Top();
-        }
-
-        if (pop_stack_.Empty())
-        {
-            MoveFromPushToPop();
-        }
-        
-        return pop_stack_.Top();
-    }
-
-template <typename T>
-auto QueueStack<T>::Back () const& -> decltype(push_stack_.Top())
+typename QueueStack<T>::ConstFrontReturnType QueueStack<T>::Back () const&
 {
     return push_stack_.Top();
 }
 
 template <typename T>
-auto QueueStack<T>::Front () & -> decltype(pop_stack_.Top())
+typename QueueStack<T>::FrontReturnType QueueStack<T>::Front () &
     {
         if ((pop_stack_.Empty()) && (push_stack_.Size() == 1))
         {
@@ -218,7 +217,7 @@ auto QueueStack<T>::Front () & -> decltype(pop_stack_.Top())
     }
 
 template <typename T>
-auto QueueStack<T>::Back () & -> decltype(push_stack_.Top())
+typename QueueStack<T>::FrontReturnType QueueStack<T>::Back () &
     {
         return push_stack_.Top();
     }

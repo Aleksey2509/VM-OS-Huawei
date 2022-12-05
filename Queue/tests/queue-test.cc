@@ -136,8 +136,7 @@ TYPED_TEST(QueueFixture, Front)
     front = this->values.back();
     front2 = this->values.front();
 
-    if(std::is_same<bool, typename TestFixture::ValueType>::value &&
-       std::is_same<custom_containers::QueueStack<bool>, typename TestFixture::QueueType>::value)
+    if(std::is_same_v<bool, typename TestFixture::ValueType>)
     {
         EXPECT_EQ(this->queue == this->queue2, true);
     }
@@ -162,8 +161,7 @@ TYPED_TEST(QueueFixture, Back)
     back = this->values.front();
     back2 = this->values.back();
 
-    if(std::is_same<bool, typename TestFixture::ValueType>::value &&
-       std::is_same<custom_containers::QueueStack<bool>, typename TestFixture::QueueType>::value)
+    if(std::is_same_v<bool, typename TestFixture::ValueType>)
     {
         EXPECT_EQ(this->queue == this->queue2, true);
     }
