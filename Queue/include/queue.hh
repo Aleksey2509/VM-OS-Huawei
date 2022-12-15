@@ -48,18 +48,15 @@ class Queue<T, custom_containers::Stack<T>>
     custom_containers::Stack<T> push_stack_;
     custom_containers::Stack<T> pop_stack_;
 
+    using FrontReturnType = std::conditional_t<std::is_same_v<T, bool>, decltype(pop_stack_.Top()), T&>;
+
 public:
     Queue() = default;
     Queue(const Queue& other) = default;
     Queue(Queue&& other) = default;
 
-// decltype(push_stack_.Top())
-
-    auto front () const& -> decltype(pop_stack_.Top());
-    auto back () const& -> decltype(push_stack_.Top());
-
-    auto front () & -> decltype(pop_stack_.Top());
-    auto back () & -> decltype(push_stack_.Top());
+    FrontReturnType front () &;
+    FrontReturnType back () &;
 
     bool empty() const;
     size_t size() const;
@@ -162,25 +159,7 @@ void Queue<T, custom_containers::Stack<T>>::MoveFromPushToPop()
 }
 
 template <typename T>
-auto Queue<T, custom_containers::Stack<T>>::front () const& -> decltype(pop_stack_.Top())
-    {
-        if (pop_stack_.Empty() && (push_stack_.Size() == 1))
-            return push_stack_.Top();
-
-        if (pop_stack_.Empty())
-            MoveFromPushToPop();
-        
-        return pop_stack_.Top();
-    }
-
-template <typename T>
-auto Queue<T, custom_containers::Stack<T>>::back () const& -> decltype(push_stack_.Top())
-{
-    return push_stack_.Top();
-}
-
-template <typename T>
-auto Queue<T, custom_containers::Stack<T>>::front () & -> decltype(pop_stack_.Top())
+typename Queue<T, custom_containers::Stack<T>>::FrontReturnType Queue<T, custom_containers::Stack<T>>::front () & 
     {
         if ((pop_stack_.Empty()) && (push_stack_.Size() == 1))
             return push_stack_.Top();
@@ -192,7 +171,7 @@ auto Queue<T, custom_containers::Stack<T>>::front () & -> decltype(pop_stack_.To
     }
 
 template <typename T>
-auto Queue<T, custom_containers::Stack<T>>::back () & -> decltype(push_stack_.Top())
+typename Queue<T, custom_containers::Stack<T>>::FrontReturnType Queue<T, custom_containers::Stack<T>>::back () &
     {
         return push_stack_.Top();
     }
