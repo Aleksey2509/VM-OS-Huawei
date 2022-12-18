@@ -23,7 +23,7 @@ add_library(Queue INTERFACE)
 target_include_directories(Queue INTERFACE ${QUEUE_INCLUDES})
 target_link_libraries(Queue INTERFACE Stack)
 
-file(GLOB_RECURSE ALL_SOURCE_FILES *.cc *.hh)
+file(GLOB_RECURSE ALL_SOURCE_FILES ./include/*.hh */include/*.hh */source/*.cc)
 
 find_program(CLANG_TIDY "clang-tidy")
 if (CLANG_TIDY)

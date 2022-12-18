@@ -20,7 +20,7 @@ struct IQueue
     virtual void Push(const T& elem) = 0;
     virtual void Pop() = 0;
 
-    virtual ~IQueue(){}
+    virtual ~IQueue() = default;
 };
 
 template<>
@@ -35,7 +35,7 @@ struct IQueue<bool>
     virtual void Push(const bool& elem) = 0;
     virtual void Pop() = 0;
 
-    virtual ~IQueue(){}
+    virtual ~IQueue() = default;
 };
 
 template <typename T>
@@ -43,8 +43,8 @@ class QueueList : public IQueue<T>
 {
     custom_containers::List<T> list_;
 
-    using ConstFrontReturnType = std::conditional_t<std::is_same_v<T, bool>, bool, const T&>;
-    using FrontReturnType = std::conditional_t<std::is_same_v<T, bool>, bool, T&>;
+    using ConstFrontReturnType = std::conditional_t<std::is_same<T, bool>::value, bool, const T&>;
+    using FrontReturnType = std::conditional_t<std::is_same<T, bool>::value, bool, T&>;
 
 public:
 
@@ -81,8 +81,8 @@ class QueueStack : public IQueue<T>
     custom_containers::Stack<T> push_stack_;
     custom_containers::Stack<T> pop_stack_;
 
-    using ConstFrontReturnType = std::conditional_t<std::is_same_v<T, bool>, decltype(pop_stack_.Top()), const T&>;
-    using FrontReturnType = std::conditional_t<std::is_same_v<T, bool>, decltype(pop_stack_.Top()), T&>;
+    using ConstFrontReturnType = std::conditional_t<std::is_same<T, bool>::value, decltype(pop_stack_.Top()), const T&>;
+    using FrontReturnType = std::conditional_t<std::is_same<T, bool>::value, decltype(pop_stack_.Top()), T&>;
 
 public:
     QueueStack() = default;

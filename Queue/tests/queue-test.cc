@@ -37,10 +37,10 @@ public:
 
 using TestedTypes = ::testing::Types<PairQueueListType<bool>,    PairQueueListType<uint8_t>, PairQueueListType<uint16_t>, PairQueueListType<uint32_t>,
                                      PairQueueListType<uint64_t>,PairQueueListType<int8_t>,  PairQueueListType<int16_t>, PairQueueListType<int32_t>,
-                                     PairQueueListType<int64_t>, PairQueueListType<float>,   PairQueueListType<double>,
+                                     PairQueueListType<int64_t>, PairQueueListType<float>,   PairQueueListType<double>, PairQueueListType<std::vector<double>>,
                                      PairQueueStackType<bool>,   PairQueueStackType<uint8_t>, PairQueueStackType<uint16_t>, PairQueueStackType<uint32_t>,
                                      PairQueueStackType<uint64_t>,PairQueueStackType<int8_t>, PairQueueStackType<int16_t>, PairQueueStackType<int32_t>,
-                                     PairQueueStackType<int64_t>, PairQueueStackType<float>,  PairQueueStackType<double>>;
+                                     PairQueueStackType<int64_t>, PairQueueStackType<float>,  PairQueueStackType<double>, PairQueueStackType<std::vector<double>>>;
 
 TYPED_TEST_SUITE(QueueFixture, TestedTypes);
 
@@ -136,7 +136,7 @@ TYPED_TEST(QueueFixture, Front)
     front = this->values.back();
     front2 = this->values.front();
 
-    if(std::is_same_v<bool, typename TestFixture::ValueType>)
+    if(std::is_same<bool, typename TestFixture::ValueType>::value)
     {
         EXPECT_EQ(this->queue == this->queue2, true);
     }
@@ -161,7 +161,7 @@ TYPED_TEST(QueueFixture, Back)
     back = this->values.front();
     back2 = this->values.back();
 
-    if(std::is_same_v<bool, typename TestFixture::ValueType>)
+    if(std::is_same<bool, typename TestFixture::ValueType>::value)
     {
         EXPECT_EQ(this->queue == this->queue2, true);
     }

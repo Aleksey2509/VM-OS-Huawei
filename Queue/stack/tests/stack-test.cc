@@ -59,7 +59,7 @@ TYPED_TEST(StackFixture, CopyConstructTest)
 
     using TestedType  = typename TestFixture::ValueType;
 
-    custom_containers::Stack<TestedType> to_copy_to{this->first_stk};
+    const custom_containers::Stack<TestedType> to_copy_to{this->first_stk};
 
     EXPECT_EQ(to_copy_to, this->first_stk);
 }
@@ -74,7 +74,7 @@ TYPED_TEST(StackFixture, MoveConstructTest)
 
     using TestedType  = typename TestFixture::ValueType;
 
-    custom_containers::Stack<TestedType> to_move_to{std::move(this->first_stk)};
+    const custom_containers::Stack<TestedType> to_move_to{std::move(this->first_stk)};
 
     EXPECT_EQ(to_move_to, this->second_stk);
 }
@@ -120,8 +120,8 @@ TYPED_TEST(StackFixture, SizeTest)
         this->first_stk.Push(iter);
     }
 
-    size_t stk_size = this->first_stk.Size();
-    size_t expected_size = this->values.size();
+    const size_t stk_size = this->first_stk.Size();
+    const size_t expected_size = this->values.size();
 
     EXPECT_EQ(stk_size, expected_size);
     
@@ -153,7 +153,7 @@ TYPED_TEST(StackFixture, PushPopTop)
 
 TYPED_TEST(StackFixture, StressTest)
 {
-    std::vector<typename TestFixture::ValueType> stress_test (TestFixture::STRESS_TEST_ACTION_AMOUNT, static_cast<typename TestFixture::ValueType>(0));
+    const std::vector<typename TestFixture::ValueType> stress_test (TestFixture::STRESS_TEST_ACTION_AMOUNT, static_cast<typename TestFixture::ValueType>(0));
     for (const auto& iter : stress_test)
     {
         this->first_stk.Push(iter);
