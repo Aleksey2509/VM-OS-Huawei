@@ -81,8 +81,8 @@ class QueueStack : public IQueue<T>
     custom_containers::Stack<T> push_stack_;
     custom_containers::Stack<T> pop_stack_;
 
-    using ConstFrontReturnType = std::conditional_t<std::is_same<T, bool>::value, decltype(pop_stack_.Top()), const T&>;
-    using FrontReturnType = std::conditional_t<std::is_same<T, bool>::value, decltype(pop_stack_.Top()), T&>;
+    using ConstFrontReturnType = std::conditional_t<std::is_same<T, bool>::value, bool, const T&>;
+    using FrontReturnType = std::conditional_t<std::is_same<T, bool>::value, bool, T&>;
 
 public:
     QueueStack() = default;
