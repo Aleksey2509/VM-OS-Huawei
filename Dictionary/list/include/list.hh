@@ -2,8 +2,6 @@
 #define LIST_HH
 #include <cstdlib>
 #include <utility>
-#include <list>
-#include <iostream>
 
 namespace custom_containers
 {
@@ -42,11 +40,11 @@ public:
     struct iterator;
     struct const_iterator;
 
-    iterator begin();
-    iterator end();
+    iterator begin() const;
+    iterator end() const;
 
-    const_iterator cbegin();
-    const_iterator cend();
+    const_iterator cbegin() const;
+    const_iterator cend() const;
 
 private:
 
@@ -446,26 +444,26 @@ List<T>::~List()
 }
 
 template <typename T>
-typename List<T>::iterator List<T>::begin()
+typename List<T>::iterator List<T>::begin() const
 {
     return iterator{front_};
 }
 
 template <typename T>
-typename List<T>::iterator List<T>::end()
+typename List<T>::iterator List<T>::end() const
 {
     return iterator{};
 }
 
 
 template <typename T>
-typename List<T>::const_iterator List<T>::cbegin()
+typename List<T>::const_iterator List<T>::cbegin() const
 {
     return const_iterator{front_};
 }
 
 template <typename T>
-typename List<T>::const_iterator List<T>::cend()
+typename List<T>::const_iterator List<T>::cend() const
 {
     return const_iterator{};
 }
