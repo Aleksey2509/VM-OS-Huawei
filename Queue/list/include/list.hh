@@ -2,8 +2,6 @@
 #define LIST_HH
 #include <cstdlib>
 #include <utility>
-#include <list>
-#include <iostream>
 
 namespace custom_containers
 {
