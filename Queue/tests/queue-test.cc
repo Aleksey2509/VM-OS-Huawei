@@ -2,6 +2,8 @@
 
 #include "queue.hh"
 #include <type_traits>
+#include <vector>
+#include <numeric>
 
 template <typename T>
 struct PairQueueListType
@@ -205,6 +207,31 @@ TYPED_TEST(QueueFixture, moveAssignOperator)
     this->queue.Pop();
 
     EXPECT_EQ(this->queue != this->queue2, true);
+}
+
+
+TYPED_TEST(QueueFixture, hugeTest)
+{
+    size_t vec_size = 1e4;
+
+    using VectorType = typename TestFixture::ValueType;
+    std::vector<VectorType> to_push;
+    for (size_t i = 0; i < vec_size; i++)
+    {
+        to_push.push_back(static_cast<VectorType>(i));
+    }
+
+    for (auto&& iter : to_push)
+    {
+        this->queue.Push(iter);
+    }
+
+    for (auto&& iter = to_push.begin(); iter != to_push.end(); iter++)
+    {
+        ASSERT_EQ(*iter == this->queue.Front(), true);
+        this->queue.Pop();
+    }
+
 }
 
 int main(int argc, char** argv)

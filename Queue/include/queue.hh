@@ -11,8 +11,8 @@ namespace custom_containers
 template <typename T>
 struct IQueue
 {
-    virtual T& Front () & = 0;
-    virtual T& Back () & = 0;
+    virtual T& Front () = 0;
+    virtual T& Back () = 0;
 
     virtual bool Empty() const = 0;
     virtual size_t Size() const = 0;
@@ -26,8 +26,8 @@ struct IQueue
 template<>
 struct IQueue<bool>
 {
-    virtual bool Front () & = 0;
-    virtual bool Back () & = 0;
+    virtual bool Front () = 0;
+    virtual bool Back () = 0;
 
     virtual bool Empty() const = 0;
     virtual size_t Size() const = 0;
@@ -52,11 +52,11 @@ public:
     QueueList(const QueueList& other) = default;
     QueueList(QueueList&& other) = default;
 
-    ConstFrontReturnType Front () const&;
-    ConstFrontReturnType Back () const&;
+    ConstFrontReturnType Front () const;
+    ConstFrontReturnType Back () const;
 
-    FrontReturnType Front () & override;
-    FrontReturnType Back () & override;
+    FrontReturnType Front () override;
+    FrontReturnType Back () override;
 
     bool Empty() const override;
     size_t Size() const override;
@@ -89,10 +89,10 @@ public:
     QueueStack(const QueueStack& other) = default;
     QueueStack(QueueStack&& other) = default;
 
-    ConstFrontReturnType Back () const&;
+    ConstFrontReturnType Back () const;
 
-    FrontReturnType Front () & override;
-    FrontReturnType Back () & override;
+    FrontReturnType Front () override;
+    FrontReturnType Back () override;
 
     bool Empty() const override;
     size_t Size() const override;
@@ -115,25 +115,25 @@ private:
 };
 
 template <typename T>
-typename QueueList<T>::ConstFrontReturnType QueueList<T>::Front () const&
+typename QueueList<T>::ConstFrontReturnType QueueList<T>::Front () const
 {
     return list_.Front();
 }
 
 template <typename T>
-typename QueueList<T>::ConstFrontReturnType QueueList<T>::Back () const&
+typename QueueList<T>::ConstFrontReturnType QueueList<T>::Back () const
 {
     return list_.Back();
 }
 
 template <typename T>
-typename QueueList<T>::FrontReturnType QueueList<T>::Front () &
+typename QueueList<T>::FrontReturnType QueueList<T>::Front ()
 {
     return list_.Front();
 }
 
 template <typename T>
-typename QueueList<T>::FrontReturnType QueueList<T>::Back () &
+typename QueueList<T>::FrontReturnType QueueList<T>::Back ()
 {
     return list_.Back();
 }
@@ -195,13 +195,13 @@ void QueueStack<T>::MoveFromPushToPop()
 }
 
 template <typename T>
-typename QueueStack<T>::ConstFrontReturnType QueueStack<T>::Back () const&
+typename QueueStack<T>::ConstFrontReturnType QueueStack<T>::Back () const
 {
     return push_stack_.Top();
 }
 
 template <typename T>
-typename QueueStack<T>::FrontReturnType QueueStack<T>::Front () &
+typename QueueStack<T>::FrontReturnType QueueStack<T>::Front ()
     {
         if ((pop_stack_.Empty()) && (push_stack_.Size() == 1))
         {
@@ -217,7 +217,7 @@ typename QueueStack<T>::FrontReturnType QueueStack<T>::Front () &
     }
 
 template <typename T>
-typename QueueStack<T>::FrontReturnType QueueStack<T>::Back () &
+typename QueueStack<T>::FrontReturnType QueueStack<T>::Back ()
     {
         return push_stack_.Top();
     }
