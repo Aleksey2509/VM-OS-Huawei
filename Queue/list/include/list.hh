@@ -2,6 +2,7 @@
 #define LIST_HH
 #include <cstdlib>
 #include <utility>
+#include <memory>
 
 namespace custom_containers
 {

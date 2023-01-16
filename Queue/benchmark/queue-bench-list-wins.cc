@@ -1,6 +1,7 @@
 #include <benchmark/benchmark.h>
 #include "queue.hh"
 #include <vector>
+#include <list>
 
 constexpr size_t RANGE_MULTIPLIER = 2;
 
