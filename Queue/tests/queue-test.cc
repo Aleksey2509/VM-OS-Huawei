@@ -212,14 +212,10 @@ TYPED_TEST(QueueFixture, moveAssignOperator)
 
 TYPED_TEST(QueueFixture, hugeTest)
 {
-    size_t vec_size = 1e4;
-
+    const size_t vec_size = 1e6;
     using VectorType = typename TestFixture::ValueType;
-    std::vector<VectorType> to_push;
-    for (size_t i = 0; i < vec_size; i++)
-    {
-        to_push.push_back(static_cast<VectorType>(i));
-    }
+
+    std::vector<VectorType> to_push(vec_size, static_cast<VectorType>(5));
 
     for (auto&& iter : to_push)
     {
