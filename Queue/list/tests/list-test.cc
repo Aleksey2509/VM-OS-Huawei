@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
+#include <vector>
 #include "list.hh"
-
 
 template <typename T>
 class ListFixture : public ::testing::Test
@@ -21,7 +21,7 @@ public:
 
 
 using TestedTypes = ::testing::Types<bool, uint8_t,  uint16_t, uint32_t, uint64_t,
-                                     int8_t, int16_t, int32_t, int64_t, float, double>;
+                                     int8_t, int16_t, int32_t, int64_t, float, double, std::vector<double>>;
 
 
 TYPED_TEST_SUITE(ListFixture, TestedTypes);
