@@ -224,10 +224,8 @@ bool HashTable<Key, T, Hash, Pred>::contains(const Key& key) const
     {
         return false;
     }
-    else
-    {
-        return true;
-    }
+
+    return true;
 }
 
 template <typename Key, typename T, typename Hash, typename Pred>
