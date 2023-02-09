@@ -77,14 +77,13 @@ template <typename Key, typename T, typename Hash, typename Pred>
 HashTable<Key, T, Hash, Pred>::HashTable(size_t capacity) : capacity_(capacity), node_list_(), iter_vec_(capacity, node_list_.end())
 {}
 
-
 template <typename Key, typename T, typename Hash, typename Pred>
 HashTable<Key, T, Hash, Pred>::HashTable(const HashTable& other) : capacity_(other.capacity_), node_list_(other.node_list_), iter_vec_(capacity_, node_list_.end())
 {
     for (auto iter = node_list_.begin(); iter != node_list_.end(); iter++)
     {
         auto index = Hash()(iter->key) % capacity_;
-        if (iter_vec_[index] != node_list_.end())
+        if (iter_vec_[index] == node_list_.end())
         {
             iter_vec_[index] = iter;
         }
@@ -153,7 +152,7 @@ void HashTable<Key, T, Hash, Pred>::Clear()
 template <typename Key, typename T, typename Hash, typename Pred>
 bool HashTable<Key, T, Hash, Pred>::operator==(const HashTable& rhs) const
 {
-    if (Size() != rhs.Size())
+    if ((Size() != rhs.Size() ) || (Capacity() != rhs.Capacity()))
         return false;
 
     if (Empty())

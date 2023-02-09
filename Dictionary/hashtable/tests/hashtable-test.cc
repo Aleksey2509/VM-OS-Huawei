@@ -32,14 +32,14 @@ public:
 
     constexpr static size_t VALUES_SIZE = 6;
 
-    std::array<T, VALUES_SIZE> values = {static_cast<T>(0), static_cast<T>(2), static_cast<T>(6),
+    std::array<T, VALUES_SIZE> values = {static_cast<T>(1), static_cast<T>(2), static_cast<T>(6),
                                                 static_cast<T>(3), static_cast<T>(9), static_cast<T>(7)};
 
 };
 
 
 // using TestedTypes = ::testing::Types<PairIntType<uint32_t>>;
-using TestedTypes = ::testing::Types<PairIntType<uint8_t>, PairIntType <uint16_t>, PairIntType<uint32_t>,
+using TestedTypes = ::testing::Types<PairIntType <int16_t>, PairIntType<int32_t>,
                                      PairIntType<float>, PairIntType<double>>;
 
 
@@ -78,6 +78,22 @@ TYPED_TEST(HashTableFixture, PrimitiveInsertion)
     }
 }
 
+TYPED_TEST(HashTableFixture, EqualityOperator)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->table1.insert(this->values[i], this->values[this->values.size() - i - 1]);
+        this->table2.insert(this->values[i], this->values[this->values.size() - i - 1]);
+    }
+
+    EXPECT_EQ(this->table1, this->table2);
+
+    this->table2[this->values[0]] = 15;
+
+    EXPECT_EQ(this->table1 == this->table2, false);
+
+}
+
 TYPED_TEST(HashTableFixture, CopyCtor)
 {
     for (size_t i = 0; i < this->values.size(); ++i)
@@ -85,7 +101,17 @@ TYPED_TEST(HashTableFixture, CopyCtor)
         this->table1.insert(this->values[i], this->values[this->values.size() - i - 1]);
     }
 
-    const custom_containers::HashTable<typename TestFixture::Key, typename TestFixture::T> to_copy_to{this->table1};
+    custom_containers::HashTable<typename TestFixture::Key, typename TestFixture::T> to_copy_to{this->table1};
 
     EXPECT_EQ(this->table1 == to_copy_to, true);
+
+    auto&& tmp = to_copy_to[this->values[0]];
+    tmp = 5;
+
+    EXPECT_EQ(to_copy_to[this->values[0]], 5);
+    EXPECT_EQ(this->table1[this->values[0]] == 5, false);
+
+    // this->table1.Clear();
+
+    EXPECT_EQ(this->table1 == to_copy_to, false);
 }
