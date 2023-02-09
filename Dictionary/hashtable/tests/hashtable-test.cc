@@ -115,3 +115,94 @@ TYPED_TEST(HashTableFixture, CopyCtor)
 
     EXPECT_EQ(this->table1 == to_copy_to, false);
 }
+
+TYPED_TEST(HashTableFixture, MoveCtor)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->table1.insert(this->values[i], this->values[this->values.size() - i - 1]);
+        this->table2.insert(this->values[i], this->values[this->values.size() - i - 1]);
+    }
+
+    custom_containers::HashTable<typename TestFixture::Key, typename TestFixture::T> to_move_to{std::move(this->table1)};
+
+    EXPECT_EQ(this->table2 == to_move_to, true);
+
+    auto&& tmp = to_move_to[this->values[0]];
+    tmp = 5;
+
+    EXPECT_EQ(to_move_to[this->values[0]], 5);
+
+    EXPECT_EQ(this->table2 == to_move_to, false);
+}
+
+TYPED_TEST(HashTableFixture, CopyAssign)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->table1.insert(this->values[i], this->values[this->values.size() - i - 1]);
+    }
+
+    this->table2 = this->table1;
+
+    EXPECT_EQ(this->table1 == this->table2, true);
+
+    auto&& tmp = this->table2[this->values[0]];
+    tmp = 5;
+
+    EXPECT_EQ(this->table2[this->values[0]], 5);
+    EXPECT_EQ(this->table1[this->values[0]] == 5, false);
+
+    // this->table1.Clear();
+
+    EXPECT_EQ(this->table1 == this->table2, false);
+}
+
+TYPED_TEST(HashTableFixture, MoveAssign)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->table1.insert(this->values[i], this->values[this->values.size() - i - 1]);
+        this->table2.insert(this->values[i], this->values[this->values.size() - i - 1]);
+    }
+
+    custom_containers::HashTable<typename TestFixture::Key, typename TestFixture::T> to_move_to{};
+    to_move_to = std::move(this->table1);
+
+    EXPECT_EQ(this->table2 == to_move_to, true);
+
+    auto&& tmp = to_move_to[this->values[0]];
+    tmp = 5;
+
+    EXPECT_EQ(to_move_to[this->values[0]], 5);
+
+    EXPECT_EQ(this->table2 == to_move_to, false);
+}
+
+TYPED_TEST(HashTableFixture, Find)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->table1.insert(this->values[i], this->values[this->values.size() - i - 1]);
+    }
+
+    auto&& iter1 = this->table1.find(this->values[0]);
+    EXPECT_EQ(iter1->elem, this->values[this->values.size() - 1]);
+
+    auto&& iter2 = this->table1.find(111);
+    EXPECT_EQ(iter2 == this->table1.end(), true);
+}
+
+TYPED_TEST(HashTableFixture, Contains)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->table1.insert(this->values[i], this->values[this->values.size() - i - 1]);
+    }
+
+    auto&& contains1 = this->table1.contains(this->values[0]);
+    EXPECT_EQ(contains1, true);
+
+    auto&& contains2 = this->table1.contains(111);
+    EXPECT_EQ(contains2, false);
+}

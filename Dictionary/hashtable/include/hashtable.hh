@@ -16,7 +16,7 @@ namespace custom_containers
 template <typename Key, typename T, typename Hash = std::hash<Key>, typename Pred = std::equal_to<Key>>
 class HashTable final
 {
-private:
+public:
 
 struct Node
 {
@@ -59,8 +59,8 @@ public:
     iterator find(const Key& key);
     const_iterator find(const Key& key) const;
 
-    bool insert(const Key& key, const T& elem);
-    bool insert_or_assign(const Key& key, const T& elem);
+    bool insert(const Key& key, const T& elem); // not correct API
+    bool insert_or_assign(const Key& key, const T& elem); // not correct API
 
     T& operator[](const Key& key);
     bool contains(const Key& key) const;
