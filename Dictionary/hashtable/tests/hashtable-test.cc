@@ -52,7 +52,7 @@ TYPED_TEST(HashTableFixture, HashTableDefaultCtor)
 }
 
 
-TYPED_TEST(HashTableFixture, HashTablePrimitiveInsertion)
+TYPED_TEST(HashTableFixture, PrimitiveInsertion)
 {
     // std::cout << "before:" << std::endl;
     // for (auto&& iter : this->table1.node_list_)
@@ -76,4 +76,16 @@ TYPED_TEST(HashTableFixture, HashTablePrimitiveInsertion)
     {
         EXPECT_EQ(this->table1[this->values[i]], this->values[this->values.size() - i - 1]);
     }
+}
+
+TYPED_TEST(HashTableFixture, CopyCtor)
+{
+    for (size_t i = 0; i < this->values.size(); ++i)
+    {
+        this->table1.insert(this->values[i], this->values[this->values.size() - i - 1]);
+    }
+
+    const custom_containers::HashTable<typename TestFixture::Key, typename TestFixture::T> to_copy_to{this->table1};
+
+    EXPECT_EQ(this->table1 == to_copy_to, true);
 }

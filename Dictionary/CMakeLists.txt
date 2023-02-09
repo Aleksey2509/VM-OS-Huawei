@@ -46,5 +46,5 @@ if (CLANG_FORMAT)
 endif()
 
 add_subdirectory(list)
-add_subdirectory(hashmap)
+add_subdirectory(hashtable)
 #add_dependencies(dictionary List)

@@ -22,6 +22,11 @@ struct Node
 {
     Key key{};
     T elem{};
+
+    bool operator==(const Node& other) const
+    {
+        return (key == other.key) && (elem == other.elem);
+    }
 };
 
 public:
@@ -71,6 +76,7 @@ public: // for debug
 template <typename Key, typename T, typename Hash, typename Pred>
 HashTable<Key, T, Hash, Pred>::HashTable(size_t capacity) : capacity_(capacity), node_list_(), iter_vec_(capacity, node_list_.end())
 {}
+
 
 template <typename Key, typename T, typename Hash, typename Pred>
 HashTable<Key, T, Hash, Pred>::HashTable(const HashTable& other) : capacity_(other.capacity_), node_list_(other.node_list_), iter_vec_(capacity_, node_list_.end())
