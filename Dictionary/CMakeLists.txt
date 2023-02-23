@@ -9,11 +9,14 @@ find_package(benchmark REQUIRED)
 
 enable_language(CXX)
 
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 set(LIST_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/list/include)
-set(HASHMAP_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/hashmap/include)
+set(HASHTABLE_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/hashtable/include)
+set(CORRECTOR_INCLUDES ${CMAKE_CURRENT_SOURCE_DIR}/corrector/include)
+
+include_directories(${HASHTABLE_INCLUDES} ${CORRECTOR_INCLUDES} ${LIST_INCLUDES})
 
 file(GLOB_RECURSE ALL_SOURCE_FILES ./include/*.hh */include/*.hh */source/*.cc)
 
@@ -47,4 +50,6 @@ endif()
 
 add_subdirectory(list)
 add_subdirectory(hashtable)
+add_subdirectory(corrector)
+add_subdirectory(texthandler)
 #add_dependencies(dictionary List)
