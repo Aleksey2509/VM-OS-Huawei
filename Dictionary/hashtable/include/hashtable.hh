@@ -1,5 +1,5 @@
-#ifndef HASHMAP_HH
-#define HASHMAP_HH
+#ifndef HASHTABLE_HH
+#define HASHTABLE_HH
 
 // #include "list.hh"
 #include <vector>
@@ -14,7 +14,7 @@ namespace custom_containers
 {
 
 template <typename Key, typename T, typename Hash = std::hash<Key>, typename Pred = std::equal_to<Key>>
-class HashTable final
+class HashTable // virt destr?
 {
 public:
 
@@ -23,10 +23,7 @@ struct Node
     Key key{};
     T elem{};
 
-    bool operator==(const Node& other) const
-    {
-        return (key == other.key) && (elem == other.elem);
-    }
+    bool operator<=>(const Node& other) const = default;
 };
 
 public:
@@ -56,6 +53,9 @@ public:
     const_iterator begin() const;
     const_iterator end() const;
 
+    const_iterator cbegin() const;
+    const_iterator cend() const;
+
     iterator find(const Key& key);
     const_iterator find(const Key& key) const;
 
@@ -66,7 +66,7 @@ public:
     bool contains(const Key& key) const;
 
 
-public: // for debug
+private:
     size_t capacity_;
 
     std::list<Node> node_list_;
@@ -180,13 +180,6 @@ bool HashTable<Key, T, Hash, Pred>::insert(const Key& key, const T& elem)
     auto index = Hash{}(key) % capacity_;
     iter_vec_[index] =  node_list_.insert(iter_vec_[index], Node{key, elem});
 
-    // std::cout << "inserted elem " << elem  << " size  - " << node_list_.size() << std::endl;
-    // for (auto&& iter : node_list_)
-    // {
-    //     std::cout << "{" << iter.key << ", " << iter.elem << "} ";
-    // }
-    // std::cout << "ended printing in insert" << std::endl;
-
     return true;
 }
 
@@ -258,10 +251,20 @@ typename HashTable<Key, T, Hash, Pred>::const_iterator HashTable<Key, T, Hash, P
 }
 
 template <typename Key, typename T, typename Hash, typename Pred>
+typename HashTable<Key, T, Hash, Pred>::const_iterator HashTable<Key, T, Hash, Pred>::cbegin() const
+{
+    return node_list_.cbegin();
+}
+
+template <typename Key, typename T, typename Hash, typename Pred>
+typename HashTable<Key, T, Hash, Pred>::const_iterator HashTable<Key, T, Hash, Pred>::cend() const
+{
+    return node_list_.cend();
+}
+
+template <typename Key, typename T, typename Hash, typename Pred>
 typename HashTable<Key, T, Hash, Pred>::iterator HashTable<Key, T, Hash, Pred>::find(const Key& key)
 {
-    // std::cout << "called find()" << std::endl;
-    // std::cout << "in start of find: size - " << node_list_.size() << std::endl;
     auto index = Hash{}(key) % capacity_;
 
     auto iter = iter_vec_[index];
@@ -272,12 +275,6 @@ typename HashTable<Key, T, Hash, Pred>::iterator HashTable<Key, T, Hash, Pred>::
             return iter;
         }
     }
-    // std::cout << "after find() " << node_list_.size() << std::endl;
-    // for (auto&& iter : node_list_)
-    // {
-    //     std::cout << "{" << iter.key << ", " << iter.elem << "} ";
-    // }
-    // std::cout << std::endl;
 
     return node_list_.end();
 }

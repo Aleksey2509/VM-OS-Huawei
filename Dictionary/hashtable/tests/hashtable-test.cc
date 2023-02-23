@@ -38,7 +38,6 @@ public:
 };
 
 
-// using TestedTypes = ::testing::Types<PairIntType<uint32_t>>;
 using TestedTypes = ::testing::Types<PairIntType <int16_t>, PairIntType<int32_t>,
                                      PairIntType<float>, PairIntType<double>>;
 
@@ -54,23 +53,10 @@ TYPED_TEST(HashTableFixture, HashTableDefaultCtor)
 
 TYPED_TEST(HashTableFixture, PrimitiveInsertion)
 {
-    // std::cout << "before:" << std::endl;
-    // for (auto&& iter : this->table1.node_list_)
-    // {
-    //     std::cout << iter.key << " " << iter.elem << " ";
-    // }
-    // std::cout << std::endl;
-
     for (size_t i = 0; i < this->values.size(); ++i)
     {
         this->table1.insert(this->values[i], this->values[this->values.size() - i - 1]);
     }
-
-    // for (auto&& iter : this->table1.node_list_)
-    // {
-    //     std::cout << "{" << iter.key << ", " << iter.elem << "} ";
-    // }
-    // std::cout << "ended printing" << std::endl;
 
     for (size_t i = 0; i < this->values.size(); ++i)
     {
@@ -110,8 +96,6 @@ TYPED_TEST(HashTableFixture, CopyCtor)
 
     EXPECT_EQ(to_copy_to[this->values[0]], 5);
     EXPECT_EQ(this->table1[this->values[0]] == 5, false);
-
-    // this->table1.Clear();
 
     EXPECT_EQ(this->table1 == to_copy_to, false);
 }
