@@ -18,13 +18,7 @@ class HashTable // virt destr?
 {
 public:
 
-struct Node
-{
-    Key key{};
-    T elem{};
-
-    bool operator<=>(const Node& other) const = default;
-};
+using Node = std::pair<Key, T>;
 
 public:
     static constexpr size_t DEFAULT_CAPACITY_ = 1 << 13;
@@ -82,7 +76,7 @@ HashTable<Key, T, Hash, Pred>::HashTable(const HashTable& other) : capacity_(oth
 {
     for (auto iter = node_list_.begin(); iter != node_list_.end(); iter++)
     {
-        auto index = Hash()(iter->key) % capacity_;
+        auto index = Hash()(iter->first) % capacity_;
         if (iter_vec_[index] == node_list_.end())
         {
             iter_vec_[index] = iter;
@@ -210,7 +204,7 @@ T& HashTable<Key, T, Hash, Pred>::operator[](const Key& key)
         iter_vec_[index] =  node_list_.insert(iter_vec_[index], Node{key, T{}});
     }
 
-    return iter->elem;
+    return iter->second;
 }
 
 template <typename Key, typename T, typename Hash, typename Pred>
@@ -268,9 +262,9 @@ typename HashTable<Key, T, Hash, Pred>::iterator HashTable<Key, T, Hash, Pred>::
     auto index = Hash{}(key) % capacity_;
 
     auto iter = iter_vec_[index];
-    for (; (iter != node_list_.end()) && ((Hash{}(iter->key) % capacity_) == index); iter++)
+    for (; (iter != node_list_.end()) && ((Hash{}(iter->first) % capacity_) == index); iter++)
     {
-        if (iter->key == key)
+        if (iter->first == key)
         {
             return iter;
         }
@@ -285,9 +279,9 @@ typename HashTable<Key, T, Hash, Pred>::const_iterator HashTable<Key, T, Hash, P
     auto index = Hash{}(key) % capacity_;
 
     auto iter = iter_vec_[index];
-    for (; (iter != node_list_.end()) && ((Hash{}(iter->key) % capacity_) == index); iter++)
+    for (; (iter != node_list_.end()) && ((Hash{}(iter->first) % capacity_) == index); iter++)
     {
-        if (iter->key == key)
+        if (iter->first == key)
         {
             return iter;
         }

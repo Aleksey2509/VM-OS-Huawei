@@ -171,7 +171,7 @@ TYPED_TEST(HashTableFixture, Find)
     }
 
     auto&& iter1 = this->table1.find(this->values[0]);
-    EXPECT_EQ(iter1->elem, this->values[this->values.size() - 1]);
+    EXPECT_EQ(iter1->second, this->values[this->values.size() - 1]);
 
     auto&& iter2 = this->table1.find(111);
     EXPECT_EQ(iter2 == this->table1.end(), true);

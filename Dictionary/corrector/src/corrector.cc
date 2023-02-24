@@ -37,16 +37,16 @@ namespace corrector
 
         for (auto&& iter : *this)
         {
-            if (iter.key == word)
-                return std::addressof(iter.key);
+            if (iter.first == word)
+                return std::addressof(iter.first);
 
-            auto&& cur_dist = lev_distance(word, iter.key);
+            auto&& cur_dist = lev_distance(word, iter.first);
 
-            if ((cur_dist < min_dist) || ((cur_dist == min_dist) && (iter.elem > max_frequency))) 
+            if ((cur_dist < min_dist) || ((cur_dist == min_dist) && (iter.second > max_frequency))) 
             {
                 min_dist = cur_dist;
-                most_similar = std::addressof(iter.key);
-                max_frequency = iter.elem;
+                most_similar = std::addressof(iter.first);
+                max_frequency = iter.second;
             }
         }
 
