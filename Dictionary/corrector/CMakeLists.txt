@@ -9,4 +9,4 @@ target_include_directories(Corrector PUBLIC ${CORRECTOR_INCLUDES})
 
 add_dependencies(Corrector HashTable)
 
-# add_subdirectory(tests)
+add_subdirectory(tests)
