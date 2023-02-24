@@ -13,7 +13,7 @@ class InputTextHandler : public IInputTextHandler
 public:
 
     InputTextHandler() = default;
-    InputTextHandler(const std::string& file_name);
+    InputTextHandler(const std::string& output_file_name);
     InputTextHandler(const InputTextHandler& rhs) = delete; // because std::fstream is uncopyable
     InputTextHandler(InputTextHandler&& rhs) noexcept = default;
 
@@ -23,16 +23,16 @@ public:
     int Read(const std::string& file_name) override;
 
 private:
-    std::fstream file;
+    std::fstream output_file_;
 };
 
 class DataBaseHandler : public IDataBaseHandler
 {
 public:
 
-    static constexpr const char* DATA_BASE_FILE_NAME = "database";
+    static constexpr const char* DATA_BASE_FILE_NAME = STANDART_DATA_BASE;
 
-    DataBaseHandler();
+    DataBaseHandler(const std::string data_base_name = DATA_BASE_FILE_NAME);
     DataBaseHandler(const DataBaseHandler& rhs) = delete; // because std::fstream is uncopyable
     DataBaseHandler(DataBaseHandler&& rhs) noexcept = default;
 
@@ -43,7 +43,8 @@ public:
     int Write(InputIt start, InputIt end) override;
 
 private:
-    std::fstream file;
+    std::string data_base_name_;
+    std::fstream data_base_;
 };
 
 }
