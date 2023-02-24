@@ -53,6 +53,10 @@ namespace corrector
         return most_similar;
     }
 
+    Corrector::Corrector(IDataBaseHandler* base_handler_ptr, IInputTextHandler* input_text_handler_ptr, ILogHandler* log_handler_ptr) :
+                         database_handler_(base_handler_ptr), text_handler_(input_text_handler_ptr), log_handler_(log_handler_ptr)
+    {}
+
     void Corrector::Correct(const std::string& file_name)
     {
         text_handler_->Read(file_name);

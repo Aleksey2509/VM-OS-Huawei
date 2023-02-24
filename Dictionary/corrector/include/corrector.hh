@@ -30,6 +30,7 @@ struct IDataBaseHandler
 
     virtual int Read() = 0;
     virtual int Write(InputIt start, InputIt end) = 0;
+    virtual ~IDataBaseHandler() = default;
 
     using iterator = std::vector<std::pair<std::string, size_t>>::iterator;
     using const_iterator = std::vector<std::pair<std::string, size_t>>::const_iterator;
@@ -50,6 +51,7 @@ protected:
 struct IInputTextHandler
 {
     virtual int Read(const std::string& file_name) = 0;
+    virtual ~IInputTextHandler() = default;
 
     using iterator = std::vector<std::string>::iterator;
     using const_iterator = std::vector<std::string>::const_iterator;
@@ -72,6 +74,7 @@ protected:
 struct ILogHandler // defines where log file is 
 {
     virtual void LogReplacement(const std::string& replacement, const std::string& word) = 0;
+    virtual ~ILogHandler() = default;
 };
 
 //========================================================================================================================
@@ -80,6 +83,7 @@ class Corrector
 {
 public:
 
+    Corrector(IDataBaseHandler* base_handler_ptr, IInputTextHandler* input_text_handler_ptr, ILogHandler* log_handler_ptr);
     void Correct(const std::string& file_name);
 
 private:
