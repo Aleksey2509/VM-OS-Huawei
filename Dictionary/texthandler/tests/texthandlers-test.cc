@@ -5,7 +5,7 @@
 
 TEST(InputTextHander, BasicReading)
 {
-    corrector::InputTextHandler test_subj(TEST_FILE);
+    text_handlers::InputTextHandler test_subj(TEST_FILE);
     test_subj.Read(TEST_FILE);
     std::vector<std::string> test_file_expected_content = {"audible", "crazy", "worthless", "dumb",
                                                             "damn", "skip", "this", "party", "quick"};
@@ -32,8 +32,8 @@ TEST(InputTextHander, BasicReading)
 
 TEST(DataBaseHander, BasicReadingWriting)
 {
-    corrector::InputTextHandler test_subj(TEST_FILE);
-    test_subj.Read(TEST_FILE);
+    text_handlers::InputTextHandler test_subj(TEST_FILE2);
+    test_subj.Read(TEST_FILE2);
     std::vector<size_t> hashes;
     std::list<std::pair<std::string, size_t>> lst;
 
@@ -42,7 +42,7 @@ TEST(DataBaseHander, BasicReadingWriting)
         lst.push_back({iter, std::hash<std::string>{}(iter)});
     }
 
-    corrector::DataBaseHandler data_base;
+    text_handlers::DataBaseHandler data_base;
     data_base.Write(lst.begin(), lst.end());
 
 }

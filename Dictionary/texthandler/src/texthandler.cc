@@ -1,7 +1,7 @@
 #include "texthandler.hh"
 #include <utility>
 
-namespace corrector
+namespace text_handlers
 {
     InputTextHandler::InputTextHandler(const std::string& output_file_name) : output_file_{output_file_name}
     {}

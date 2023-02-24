@@ -5,10 +5,10 @@
 #include <fstream>
 #include <string>
 
-namespace corrector
+namespace text_handlers
 {
 
-class InputTextHandler : public IInputTextHandler
+class InputTextHandler : public corrector::IInputTextHandler
 {
 public:
 
@@ -26,7 +26,7 @@ private:
     std::fstream output_file_;
 };
 
-class DataBaseHandler : public IDataBaseHandler
+class DataBaseHandler : public corrector::IDataBaseHandler
 {
 public:
 
