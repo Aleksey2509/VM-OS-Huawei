@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <array>
+#include <vector>
 #include <string_view>
 #include <algorithm>
 
@@ -12,9 +13,11 @@ namespace corrector
 {
 
 constexpr size_t MAX_LEV_DISTANCE = 2;
+constexpr size_t MIN_WORD_LENGTH = MAX_LEV_DISTANCE;
+constexpr size_t DUMMY_VAR = 3;
 constexpr size_t DICTIONARY_NUM = 30;
 
-size_t lev_distance(const std::string_view& lhs, const std::string_view& rhs);
+size_t lev_distance(const std::string& lhs, const std::string& rhs);
 
 class Dictionary : public custom_containers::HashTable<std::string, size_t>
 {
@@ -28,6 +31,8 @@ struct IDataBaseHandler
 {
     using InputIt = Dictionary::iterator;
 
+    virtual int Open() = 0;
+    virtual void Close() = 0;
     virtual int Read() = 0;
     virtual int Write(InputIt start, InputIt end) = 0;
     virtual ~IDataBaseHandler() = default;
@@ -84,11 +89,12 @@ class Corrector
 public:
 
     Corrector(IDataBaseHandler* base_handler_ptr, IInputTextHandler* input_text_handler_ptr, ILogHandler* log_handler_ptr);
+    Corrector(std::unique_ptr<IDataBaseHandler> base_handler_ptr, std::unique_ptr<IInputTextHandler> input_text_handler_ptr, std::unique_ptr<ILogHandler> log_handler_ptr);
+
     void Correct(const std::string& file_name);
 
 private:
 
-    void LogReplacement(const std::string& replacement, const std::string& iter);
     const std::string* GetBestWord(const std::string& str) const;
 
 public:
@@ -100,10 +106,12 @@ public:
 
 private:
 
-    std::vector<Dictionary> dictionary_vec_;
+    void LoadWordBase();
+
     std::unique_ptr<IDataBaseHandler> database_handler_;
     std::unique_ptr<IInputTextHandler> text_handler_;
     std::unique_ptr<ILogHandler> log_handler_;
+    std::vector<Dictionary> dictionary_vec_;
 };
 
 } // namespace corrector
