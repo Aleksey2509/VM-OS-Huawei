@@ -6,7 +6,9 @@
 #include <list>
 #include <algorithm>
 #include <utility>
-#include <unordered_map>
+
+
+#include <unordered_map> // deprecate after debug
 #include <iostream>
 
 
@@ -18,14 +20,14 @@ class HashTable // virt destr?
 {
 public:
 
-using Node = std::pair<Key, T>;
+    using Node = std::pair<Key, T>;
 
-public:
-    static constexpr size_t DEFAULT_CAPACITY_ = 1 << 13;
+    static constexpr size_t DEFAULT_CAPACITY = 1 << 13;
 
-    explicit HashTable(size_t capacity = DEFAULT_CAPACITY_);
-    HashTable(const HashTable& rhs);
-    HashTable(HashTable&& rhs) noexcept;
+    HashTable();
+    explicit HashTable(size_t capacity);
+    HashTable(const HashTable& other);
+    HashTable(HashTable&& other) noexcept;
 
     HashTable& operator=(const HashTable &rhs);
     HashTable& operator=(HashTable&& rhs) noexcept;
@@ -61,11 +63,15 @@ public:
 
 
 private:
-    size_t capacity_;
+    size_t capacity_ = DEFAULT_CAPACITY;
 
     std::list<Node> node_list_;
     std::vector<typename std::list<Node>::iterator> iter_vec_;
 };
+
+template <typename Key, typename T, typename Hash, typename Pred>
+HashTable<Key, T, Hash, Pred>::HashTable() : capacity_(DEFAULT_CAPACITY), node_list_(), iter_vec_(capacity_, node_list_.end())
+{}
 
 template <typename Key, typename T, typename Hash, typename Pred>
 HashTable<Key, T, Hash, Pred>::HashTable(size_t capacity) : capacity_(capacity), node_list_(), iter_vec_(capacity, node_list_.end())
@@ -202,6 +208,7 @@ T& HashTable<Key, T, Hash, Pred>::operator[](const Key& key)
     {
         auto index = Hash{}(key) % capacity_;
         iter_vec_[index] =  node_list_.insert(iter_vec_[index], Node{key, T{}});
+        return iter_vec_[index]->second;
     }
 
     return iter->second;

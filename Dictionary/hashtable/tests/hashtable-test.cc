@@ -26,8 +26,8 @@ public:
     using Key = typename TypePair::KeyType;
     using T   = typename TypePair::ValueType;
 
-    custom_containers::HashTable<Key, T> table1;
-    custom_containers::HashTable<Key, T> table2;
+    custom_containers::HashTable<Key, T> table1{};
+    custom_containers::HashTable<Key, T> table2{};
 
 
     constexpr static size_t VALUES_SIZE = 6;
