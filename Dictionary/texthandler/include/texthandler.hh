@@ -23,6 +23,8 @@ public:
     int Read(const std::string& file_name) override;
 
 private:
+    void ProcessWord(std::string& word);
+
     std::fstream output_file_;
 };
 
@@ -39,12 +41,25 @@ public:
     DataBaseHandler& operator=(const DataBaseHandler &rhs) = delete; // because std::fstream is uncopyable
     DataBaseHandler& operator=(DataBaseHandler&& rhs) noexcept = default;
 
+    int Open() override;
+    void Close() override;
     int Read() override;
     int Write(InputIt start, InputIt end) override;
 
 private:
     std::string data_base_name_;
     std::fstream data_base_;
+};
+
+class Logger : public corrector::ILogHandler // maybe do so that the log file is open while Logger is alive
+{
+public:
+    Logger() = default;
+    Logger(const char* log_file_name);
+    void LogReplacement(const std::string& replacement, const std::string& word) override;
+
+private:
+    const char* log_file_name_ = DEFAULT_LOG_FILE_NAME;
 };
 
 }

@@ -10,6 +10,11 @@ TEST(InputTextHander, BasicReading)
     std::vector<std::string> test_file_expected_content = {"audible", "crazy", "worthless", "dumb",
                                                             "damn", "skip", "this", "party", "quick"};
 
+    for (auto iter : test_subj)
+    {
+        std::cout << iter << " " << std::boolalpha << (iter == std::string("\n")) << std::endl;
+    }
+
     auto&& expected_iter = test_file_expected_content.begin();
     for (auto&& iter = test_subj.begin(); iter != test_subj.end(); ++iter, ++expected_iter)
     {
@@ -42,8 +47,8 @@ TEST(DataBaseHander, BasicReadingWriting)
         lst.push_back({iter, std::hash<std::string>{}(iter)});
     }
 
-    text_handlers::DataBaseHandler data_base;
-    data_base.Write(lst.begin(), lst.end());
+    text_handlers::DataBaseHandler data_base{"../../test_data_base"};
+    EXPECT_EQ(data_base.Write(lst.begin(), lst.end()), 0);
 
 }
 
