@@ -23,7 +23,7 @@ public:
     int Read(const std::string& file_name) override;
     int Write(iterator start, iterator end, const std::string& file_name);
 
-public: // for debug
+private:
     void ProcessWord(std::string& word);
     const std::string delimiters = {';', ' ', ',', '-', '\n', '!', '?'};
 

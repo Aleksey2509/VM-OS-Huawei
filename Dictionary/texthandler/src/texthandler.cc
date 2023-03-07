@@ -41,7 +41,7 @@ namespace text_handlers
         auto buffer_word_begin = std::find_if_not(text_buffer.begin(), text_buffer.end(), if_delimiter);
         auto buffer_word_end = std::find_if(buffer_word_begin, text_buffer.end(), if_delimiter);
 
-        while(buffer_word_end != text_buffer.end())
+        while(buffer_word_begin != text_buffer.end())
         {
             word_vec_.push_back({buffer_word_begin, buffer_word_end});
 
@@ -108,34 +108,33 @@ namespace text_handlers
                 return open_result;
         }
 
-        auto&& underlying_buf = data_base_.rdbuf();
-        std::size_t buffer_size = underlying_buf->pubseekoff (0, data_base_.end, data_base_.in);
-        underlying_buf->pubseekpos (0,data_base_.in);
-
-        std::string data_base_buffer;
-        data_base_buffer.reserve(buffer_size);
-        underlying_buf->sgetn(data_base_buffer.data(), buffer_size);
-
+        std::stringstream buf;
+        buf << data_base_.rdbuf();
         data_base_.close();
 
-        char* char_buf = data_base_buffer.data();
+        std::string text_buffer = buf.str();
+        // std::cout << "read: " << text_buffer << std::endl;
 
-        auto&& string_iter = data_base_buffer.begin();
-        auto&& string_iter_end = data_base_buffer.end();
+        char* actual_buf = text_buffer.data();
+        char* actual_buf_end = actual_buf + text_buffer.size();
 
         size_t word_len = 0;
-        for(;string_iter != string_iter_end; string_iter += word_len + 9)
+        size_t stupid = 0;
+        for(; actual_buf != actual_buf_end;)
         {
             std::string tmp_string;
             size_t tmp_string_frequency;
 
-            auto&& word_len = std::find(string_iter, string_iter_end, '\0') - string_iter + 1;
+            auto word_len = std::find(actual_buf, actual_buf_end, '\0') - actual_buf;
 
             tmp_string.reserve(word_len);
-            tmp_string.assign(char_buf, word_len);
-            char_buf += word_len + 1;
-            tmp_string_frequency = *reinterpret_cast<size_t*>(char_buf);
-            char_buf += sizeof(size_t);
+            tmp_string.assign(actual_buf, word_len);
+            actual_buf += word_len + 1;
+
+            tmp_string_frequency = *reinterpret_cast<size_t*>(actual_buf);
+            actual_buf += sizeof(size_t);
+
+            info_vec_.push_back({std::move(tmp_string), std::move(tmp_string_frequency)});
         }
 
         return 0;
@@ -149,7 +148,7 @@ namespace text_handlers
         {
             auto&& tmp_string_frequency = start->second;
 
-            output.write(reinterpret_cast<char*>(const_cast<char*>(start->first.c_str())), start->first.size());
+            output.write(reinterpret_cast<char*>(const_cast<char*>(start->first.c_str())), start->first.size() + 1);
             output.write(reinterpret_cast<char*>(&start->second), sizeof(size_t));
         }
 
@@ -160,7 +159,9 @@ namespace text_handlers
                 return open_result;
         }
 
+        // std::cout << "writng" << output.str() << std::endl;
         data_base_ << output.str();
+        // data_base_ << "ended";
 
         return 0;
     }
