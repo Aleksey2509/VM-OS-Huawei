@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <numeric>
+#include <algorithm>
 
 namespace corrector
 {
@@ -28,13 +29,13 @@ namespace corrector
             for (size_t i = 1; i <= min_size; ++i)
             {
                 previous_diagonal_save = lev_dist[i];
-                if (lhs[i - 1] == rhs[j - 1])
+                if (lhs[i] == rhs[j])
                 {
                     lev_dist[i] = previous_diagonal;
                 }
                 else
                 {
-                    lev_dist[i] = std::min({lev_dist[i - 1], lev_dist[i], previous_diagonal}) + 1;
+                    lev_dist[i] = std::min({lev_dist[i], lev_dist[i], previous_diagonal}) + 1;
                 }
                 previous_diagonal = previous_diagonal_save;
             }
@@ -45,7 +46,7 @@ namespace corrector
 
 
 
-    const std::string* Dictionary::FindMostSimilar(const std::string& word) const&
+    std::pair<const std::string*, size_t> Dictionary::FindMostSimilar(const std::string& word) const&
     {
         const std::string* most_similar = nullptr;
         size_t min_dist = MAX_LEV_DISTANCE;
@@ -54,9 +55,8 @@ namespace corrector
 
         for (auto&& iter : *this)
         {
-            // std::cout << "checking: " << iter.first << " " << word << std::endl;
             if (iter.first == word)
-                return std::addressof(iter.first);
+                return {std::addressof(iter.first), iter.second};
 
             auto&& cur_dist = lev_distance(word, iter.first);
 
@@ -68,7 +68,7 @@ namespace corrector
             }
         }
 
-        return most_similar;
+        return {most_similar, max_frequency};
     }
 
     Corrector::Corrector(IDataBaseHandler* base_handler_ptr, IInputTextHandler* input_text_handler_ptr, ILogHandler* log_handler_ptr) :
@@ -92,12 +92,10 @@ namespace corrector
 
         for (auto&& iter : *database_handler_)
         {
-            // std::cout << iter.first << " " << iter.second << std::endl;
             auto&& word_size = iter.first.size();
-            if (word_size < DICTIONARY_NUM)
+            if ((word_size > MIN_WORD_LENGTH) && (word_size < DICTIONARY_NUM))
             {
-                // std::cout << word_size  << std::endl;
-                dictionary_vec_[word_size - 1][iter.first] += iter.second;
+                dictionary_vec_[word_size][iter.first] += iter.second;
             }
         }
 
@@ -110,6 +108,8 @@ namespace corrector
         for (auto&& iter : *text_handler_)
         {
             const std::string* replacement = GetBestWord(iter);
+            if (!replacement)
+                log_handler_->LogReplacement("nothing", iter);
             if (replacement && (*replacement != iter))
                 log_handler_->LogReplacement(*replacement, iter);
         }
@@ -117,31 +117,34 @@ namespace corrector
 
     const std::string* Corrector::GetBestWord(const std::string& str) const
     {
-        // std::cout << "trying to correct " << str << std::endl;
-        constexpr size_t max_replacement_word_amount = 2 * MAX_LEV_DISTANCE + 1;
-        std::array<const std::string*, max_replacement_word_amount> replacements{nullptr};
-
-        auto&& size = str.size();
-        for (size_t i = size - MAX_LEV_DISTANCE; i < size + MAX_LEV_DISTANCE + 1; ++i)
-        {
-            replacements[i - size + MAX_LEV_DISTANCE] = dictionary_vec_[i - 1].FindMostSimilar(str);
-        }
-
+        constexpr int max_replacement_word_amount = 2 * MAX_LEV_DISTANCE + 1;
+        std::array<std::pair<const std::string*, size_t>, max_replacement_word_amount> replacements{};
         constexpr size_t zero_lev_distance_index = MAX_LEV_DISTANCE;
 
-        if (replacements[zero_lev_distance_index] != nullptr)
+        auto&& size = str.size();
+        if (size <= MAX_LEV_DISTANCE)
+            return nullptr;
+
+        for (size_t i = size - MAX_LEV_DISTANCE; i < size + MAX_LEV_DISTANCE + 1; ++i)
         {
-            // std::cout << "it is wrongly written: " << str << " replacing with " << *replacements[zero_lev_distance_index] << std::endl;
-            return replacements[zero_lev_distance_index];
+            replacements[i - size + MAX_LEV_DISTANCE] = dictionary_vec_[i].FindMostSimilar(str);
         }
 
-        for (int i = 1; i < MAX_LEV_DISTANCE + 1; ++i)
-        {
-            if (replacements[zero_lev_distance_index + i] != nullptr)
-                return replacements[zero_lev_distance_index + i];
 
-            if (replacements[zero_lev_distance_index - i] != nullptr)
-                return replacements[zero_lev_distance_index - i];
+        if ((replacements[zero_lev_distance_index].first != nullptr))
+        {
+            return replacements[zero_lev_distance_index].first;
+        }
+
+        auto&& better_word_cmp =  [](std::pair<const std::string*, size_t> lhs, std::pair<const std::string*, size_t> rhs){return lhs.second < rhs.second;};
+
+        for (int i = 1; i < MAX_LEV_DISTANCE + 1; i++)
+        {
+            auto better_word = std::max(replacements[zero_lev_distance_index - i], replacements[zero_lev_distance_index + i], better_word_cmp);
+            if (better_word.first != nullptr)
+            {
+                return better_word.first;
+            }
         }
 
         return nullptr;
@@ -152,13 +155,10 @@ namespace corrector
         text_handler_->Read(file_name);
         for (auto&& iter : *text_handler_)
         {
-            // std::cout << "loading " << iter << " hash = " << std::hash<std::string>{}(iter)<< std::endl;
             auto&& word_size = iter.size();
             if ((word_size > MIN_WORD_LENGTH) && (word_size < DICTIONARY_NUM))
             {
-                // std::cout << "was " << dictionary_vec_[word_size - 1][iter] << std::endl;
-                dictionary_vec_[word_size - 1][iter] += 1;
-                // std::cout << "now " << dictionary_vec_[word_size - 1][iter] << std::endl;
+                dictionary_vec_[word_size][iter] += 1;
             }
         }
     }
@@ -166,9 +166,8 @@ namespace corrector
     void Corrector::SaveWordBase()
     {
         database_handler_->Open();
-        for (auto&& dict_iter = dictionary_vec_.begin(); dict_iter != dictionary_vec_.end(); dict_iter++)
+        for (auto dict_iter = dictionary_vec_.begin(); dict_iter != dictionary_vec_.end(); dict_iter++)
         {
-            // std::cout << "working with dict " << i << "empty: " << std::boolalpha << (dict_iter->begin() == dict_iter->end()) << std::endl;
             database_handler_->Write(dict_iter->begin(), dict_iter->end());
         }
         database_handler_->Close();

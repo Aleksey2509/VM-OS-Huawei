@@ -12,9 +12,8 @@
 namespace corrector
 {
 
-constexpr size_t MAX_LEV_DISTANCE = 2;
-constexpr size_t MIN_WORD_LENGTH = MAX_LEV_DISTANCE;
-constexpr size_t DUMMY_VAR = 3;
+constexpr int MAX_LEV_DISTANCE = 2;
+constexpr size_t MIN_WORD_LENGTH = 1;
 constexpr size_t DICTIONARY_NUM = 30;
 
 size_t lev_distance(const std::string& lhs, const std::string& rhs);
@@ -22,7 +21,7 @@ size_t lev_distance(const std::string& lhs, const std::string& rhs);
 class Dictionary : public custom_containers::HashTable<std::string, size_t>
 {
 public:
-    const std::string* FindMostSimilar(const std::string& word) const&;
+    std::pair<const std::string*, size_t> FindMostSimilar(const std::string& word) const&;
 };
 
 //========================================================================================================================
@@ -55,11 +54,13 @@ protected:
 
 struct IInputTextHandler
 {
-    virtual int Read(const std::string& file_name) = 0;
-    virtual ~IInputTextHandler() = default;
-
     using iterator = std::vector<std::string>::iterator;
     using const_iterator = std::vector<std::string>::const_iterator;
+
+    virtual ~IInputTextHandler() = default;
+
+    virtual int Read(const std::string& file_name) = 0;
+    virtual int Write(iterator start, iterator end, const std::string& file_name) = 0;
 
     iterator begin() { return word_vec_.begin(); }
     iterator end() { return word_vec_.end(); }

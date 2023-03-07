@@ -21,11 +21,11 @@ public:
     InputTextHandler& operator=(InputTextHandler&& rhs) noexcept = delete;
 
     int Read(const std::string& file_name) override;
-    int Write(iterator start, iterator end, const std::string& file_name);
+    int Write(iterator start, iterator end, const std::string& file_name) override;
 
 private:
     void ProcessWord(std::string& word);
-    const std::string delimiters = {';', ' ', ',', '-', '\n', '!', '?'};
+    const std::string delimiters = {';', ' ', ',', '-', '\n', '!', '?', '"', '.', '(', ')'};
 
     std::fstream output_file_;
     std::string text_buffer;
