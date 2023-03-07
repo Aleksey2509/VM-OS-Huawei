@@ -102,7 +102,11 @@ public:
     using const_iterator = custom_containers::HashTable<std::string, size_t>::const_iterator;
 
     void Learn(const std::string& file_name);
-    void SaveWordBase();
+
+    void SaveWordBase(); // do a binary
+                         // use reinterpret_cast
+
+    // LoadWordBase(const std::string& file_name) - loads database
 
 private:
 

@@ -15,17 +15,20 @@ public:
     InputTextHandler() = default;
     InputTextHandler(const std::string& output_file_name);
     InputTextHandler(const InputTextHandler& rhs) = delete; // because std::fstream is uncopyable
-    InputTextHandler(InputTextHandler&& rhs) noexcept = default;
+    InputTextHandler(InputTextHandler&& rhs) noexcept = delete;
 
     InputTextHandler& operator=(const InputTextHandler &rhs) = delete; // because std::fstream is uncopyable
-    InputTextHandler& operator=(InputTextHandler&& rhs) noexcept = default;
+    InputTextHandler& operator=(InputTextHandler&& rhs) noexcept = delete;
 
     int Read(const std::string& file_name) override;
+    int Write(iterator start, iterator end, const std::string& file_name);
 
-private:
+public: // for debug
     void ProcessWord(std::string& word);
+    const std::string delimiters = {';', ' ', ',', '-', '\n', '!', '?'};
 
     std::fstream output_file_;
+    std::string text_buffer;
 };
 
 class DataBaseHandler : public corrector::IDataBaseHandler

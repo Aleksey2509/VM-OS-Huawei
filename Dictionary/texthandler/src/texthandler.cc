@@ -1,5 +1,10 @@
 #include "texthandler.hh"
+
 #include <utility>
+#include <memory>
+#include <sstream>
+
+#include <iostream>
 
 namespace text_handlers
 {
@@ -13,24 +18,67 @@ namespace text_handlers
 
     int InputTextHandler::Read(const std::string& file_name)
     {
+        // init buffer part
         word_vec_.clear();
-        std::fstream input_file;
+        text_buffer.clear();
+
+        std::ifstream input_file;
         input_file.open(file_name);
 
         if (!input_file.good())
             return -1;
 
-        while (input_file.good())
-        {
-            std::string tmp;
-            input_file >> tmp;
-            ProcessWord(tmp);
-            if (!tmp.empty())
-            {
-                word_vec_.push_back(std::move(tmp));
-            }
-        }
+        std::stringstream buf;
+        buf << input_file.rdbuf();
+        text_buffer = buf.str();
+
         input_file.close();
+        // init buffer end
+
+        // parse part
+        auto&& if_delimiter = [del = delimiters](char ch){ return del.find(ch) != del.npos; };
+
+        auto buffer_word_begin = std::find_if_not(text_buffer.begin(), text_buffer.end(), if_delimiter);
+        auto buffer_word_end = std::find_if(buffer_word_begin, text_buffer.end(), if_delimiter);
+
+        while(buffer_word_end != text_buffer.end())
+        {
+            word_vec_.push_back({buffer_word_begin, buffer_word_end});
+
+            buffer_word_begin = std::find_if_not(buffer_word_end, text_buffer.end(), if_delimiter);
+            buffer_word_end = std::find_if(buffer_word_begin, text_buffer.end(), if_delimiter);
+        }
+
+        return 0;
+    }
+
+    int InputTextHandler::Write(iterator start, iterator end, const std::string& file_name)
+    {
+        std::ofstream output_file;
+        std::stringstream output;
+
+        auto&& if_delimiter = [del = delimiters](char ch){ return del.find(ch) != del.npos; };
+
+        auto delims_begin = std::find_if(text_buffer.begin(), text_buffer.end(), if_delimiter);
+        auto delims_end = std::find_if_not(delims_begin, text_buffer.end(), if_delimiter);
+
+        for (auto iter = start; iter != end; iter++)
+        {
+            output << *iter;
+            output << std::string{delims_begin, delims_end};
+
+            delims_begin = std::find_if(delims_end, text_buffer.end(), if_delimiter);
+            delims_end = std::find_if_not(delims_begin, text_buffer.end(), if_delimiter);
+        }
+
+
+        output_file.open(file_name);
+
+        if (!output_file.good())
+            return -1;
+
+        output_file << output.str();
+        output_file.close();
 
         return 0;
     }
@@ -60,16 +108,34 @@ namespace text_handlers
                 return open_result;
         }
 
-        while (data_base_.good())
+        auto&& underlying_buf = data_base_.rdbuf();
+        std::size_t buffer_size = underlying_buf->pubseekoff (0, data_base_.end, data_base_.in);
+        underlying_buf->pubseekpos (0,data_base_.in);
+
+        std::string data_base_buffer;
+        data_base_buffer.reserve(buffer_size);
+        underlying_buf->sgetn(data_base_buffer.data(), buffer_size);
+
+        data_base_.close();
+
+        char* char_buf = data_base_buffer.data();
+
+        auto&& string_iter = data_base_buffer.begin();
+        auto&& string_iter_end = data_base_buffer.end();
+
+        size_t word_len = 0;
+        for(;string_iter != string_iter_end; string_iter += word_len + 9)
         {
             std::string tmp_string;
             size_t tmp_string_frequency;
-            data_base_ >> tmp_string;
-            if (!data_base_.good())
-                break;
-            data_base_ >> tmp_string_frequency;
 
-            info_vec_.emplace_back(std::move(tmp_string), std::move(tmp_string_frequency));
+            auto&& word_len = std::find(string_iter, string_iter_end, '\0') - string_iter + 1;
+
+            tmp_string.reserve(word_len);
+            tmp_string.assign(char_buf, word_len);
+            char_buf += word_len + 1;
+            tmp_string_frequency = *reinterpret_cast<size_t*>(char_buf);
+            char_buf += sizeof(size_t);
         }
 
         return 0;
@@ -77,6 +143,16 @@ namespace text_handlers
 
     int DataBaseHandler::Write(InputIt start, InputIt end)
     {
+        std::stringstream output;
+
+        for (auto&& iter = start; iter != end; iter++)
+        {
+            auto&& tmp_string_frequency = start->second;
+
+            output.write(reinterpret_cast<char*>(const_cast<char*>(start->first.c_str())), start->first.size());
+            output.write(reinterpret_cast<char*>(&start->second), sizeof(size_t));
+        }
+
         if (!data_base_.is_open())
         {
             auto&& open_result = Open();
@@ -84,10 +160,7 @@ namespace text_handlers
                 return open_result;
         }
 
-        for (auto&& iter = start; iter != end; iter++)
-        {
-            data_base_ << iter->first << " " << iter->second << std::endl;
-        }
+        data_base_ << output.str();
 
         return 0;
     }
