@@ -4,7 +4,6 @@
 #include <memory>
 #include <array>
 #include <vector>
-#include <string_view>
 #include <algorithm>
 
 #include "hashtable.hh"
@@ -71,6 +70,8 @@ struct IInputTextHandler
     const_iterator cbegin() const { return word_vec_.cbegin(); }
     const_iterator cend() const { return word_vec_.cend(); }
 
+    size_t size() const { return word_vec_.size(); }
+
 protected:
     std::vector<std::string> word_vec_;
 };
@@ -79,7 +80,7 @@ protected:
 
 struct ILogHandler // defines where log file is 
 {
-    virtual void LogReplacement(const std::string& replacement, const std::string& word) = 0;
+    virtual void LogReplacement(const std::string& replacement, const std::string& word) const = 0;
     virtual ~ILogHandler() = default;
 };
 
@@ -97,6 +98,7 @@ public:
 private:
 
     const std::string* GetBestWord(const std::string& str) const;
+    bool if_parallel = false;
 
 public:
     using iterator = custom_containers::HashTable<std::string, size_t>::iterator;
@@ -104,8 +106,8 @@ public:
 
     void Learn(const std::string& file_name);
 
-    void SaveWordBase(); // do a binary
-                         // use reinterpret_cast
+    void SaveWordBase();
+    void setParallel(bool flag) { if_parallel = flag; };
 
     // LoadWordBase(const std::string& file_name) - loads database
 

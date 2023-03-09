@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include <numeric>
-#include <algorithm>
+#include <future>
 
 namespace corrector
 {
@@ -105,14 +105,61 @@ namespace corrector
     void Corrector::Correct(const std::string& file_name)
     {
         text_handler_->Read(file_name);
-        for (auto&& iter : *text_handler_)
+        if (!if_parallel)
         {
-            const std::string* replacement = GetBestWord(iter);
-            if (!replacement)
-                log_handler_->LogReplacement("nothing", iter);
-            if (replacement && (*replacement != iter))
-                log_handler_->LogReplacement(*replacement, iter);
+            for (const auto iter : *text_handler_)
+            {
+                
+                const std::string* replacement = GetBestWord(iter);
+                if (!replacement)
+                    log_handler_->LogReplacement("nothing", iter);
+                if (replacement && (*replacement != iter))
+                    log_handler_->LogReplacement(*replacement, iter);
+            }
         }
+        else
+        {
+            auto&& work_for_thread = [this](IInputTextHandler::const_iterator begin, IInputTextHandler::const_iterator end)
+            {
+                std::vector<std::pair<const std::string*, const std::string*>> replacements;
+                for (auto iter = begin; iter != end; iter++)
+                {
+                    const std::string* replacement = GetBestWord(*iter);
+                    replacements.push_back({replacement, std::addressof(*iter)});
+                }
+
+                return replacements;
+            };
+            using thread_return_type = std::vector<std::pair<const std::string*, const std::string*>>;
+
+            auto word_vec_size = text_handler_->size();
+
+            int num_of_threads = std::thread::hardware_concurrency();
+            std::vector<std::future<thread_return_type>>  handle_vector;
+
+            for (auto i = 0; i < num_of_threads - 1; i++)
+            {
+                handle_vector.push_back(std::async(std::launch::async, work_for_thread, 
+                    text_handler_->cbegin() + i * word_vec_size / num_of_threads, text_handler_->cbegin() + (i + 1) * word_vec_size / num_of_threads));
+            }
+
+            handle_vector.push_back(std::async(std::launch::async, work_for_thread, 
+                text_handler_->cbegin() + word_vec_size * (num_of_threads - 1) / num_of_threads, text_handler_->cend()));
+
+            for (int i = 0; i < handle_vector.size(); i++)
+            {
+                handle_vector[i].wait();
+                auto word_vector = handle_vector[i].get();
+                for (auto&& word_iter : word_vector)
+                {
+                    if (!word_iter.first)
+                        log_handler_->LogReplacement("nothing", *word_iter.second);
+                    if (word_iter.first && (*word_iter.first != *word_iter.second))
+                        log_handler_->LogReplacement(*word_iter.first, *word_iter.second);
+                }
+            }
+        }
+
     }
 
     const std::string* Corrector::GetBestWord(const std::string& str) const

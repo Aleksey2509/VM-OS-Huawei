@@ -59,7 +59,7 @@ class Logger : public corrector::ILogHandler // maybe do so that the log file is
 public:
     Logger() = default;
     Logger(const char* log_file_name);
-    void LogReplacement(const std::string& replacement, const std::string& word) override;
+    void LogReplacement(const std::string& replacement, const std::string& word) const override;
 
 private:
     const char* log_file_name_ = DEFAULT_LOG_FILE_NAME;

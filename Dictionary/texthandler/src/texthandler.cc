@@ -113,7 +113,6 @@ namespace text_handlers
         data_base_.close();
 
         std::string text_buffer = buf.str();
-        // std::cout << "read: " << text_buffer << std::endl;
 
         char* actual_buf = text_buffer.data();
         char* actual_buf_end = actual_buf + text_buffer.size();
@@ -169,7 +168,7 @@ namespace text_handlers
     Logger::Logger(const char* log_file_name) : log_file_name_{log_file_name}
     {}
 
-    void Logger::LogReplacement(const std::string& replacement, const std::string& word)
+    void Logger::LogReplacement(const std::string& replacement, const std::string& word) const
     {
         std::fstream log_file;
         log_file.open(log_file_name_, std::ios::out | std::ios::app);
