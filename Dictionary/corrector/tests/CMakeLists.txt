@@ -47,7 +47,7 @@ endif()
 
 
 if(SANITIZERS)
-    target_compile_options(${CORRECTOR_TEST_EXEC} PUBLIC -fsanitize=address -fsanitize=undefined -g)
-    set_target_properties(${CORRECTOR_TEST_EXEC} PROPERTIES LINK_FLAGS "-fsanitize=address -fsanitize=undefined")
+    target_compile_options(${CORRECTOR_TEST_EXEC} PUBLIC -fsanitize=undefined -fsanitize=thread -g)
+    set_target_properties(${CORRECTOR_TEST_EXEC} PROPERTIES LINK_FLAGS " -fsanitize=undefined -fsanitize=thread")
 endif()
 

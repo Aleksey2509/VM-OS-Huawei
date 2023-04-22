@@ -8,7 +8,7 @@
 namespace text_handlers
 {
 
-class InputTextHandler : public corrector::IInputTextHandler
+class InputTextHandler final : public corrector::IInputTextHandler
 {
 public:
 
@@ -31,7 +31,7 @@ private:
     std::string text_buffer;
 };
 
-class DataBaseHandler : public corrector::IDataBaseHandler
+class DataBaseHandler final : public corrector::IDataBaseHandler
 {
 public:
 
@@ -54,7 +54,7 @@ private:
     std::fstream data_base_;
 };
 
-class Logger : public corrector::ILogHandler // maybe do so that the log file is open while Logger is alive
+class Logger final : public corrector::ILogHandler // maybe do so that the log file is open while Logger is alive
 {
 public:
     Logger() = default;

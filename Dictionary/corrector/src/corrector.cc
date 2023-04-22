@@ -149,7 +149,7 @@ namespace corrector
             for (int i = 0; i < handle_vector.size(); i++)
             {
                 handle_vector[i].wait();
-                auto word_vector = handle_vector[i].get();
+                auto&& word_vector = handle_vector[i].get();
                 for (auto&& word_iter : word_vector)
                 {
                     if (!word_iter.first)
@@ -185,14 +185,8 @@ namespace corrector
 
         auto&& better_word_cmp =  [](std::pair<const std::string*, size_t> lhs, std::pair<const std::string*, size_t> rhs){return lhs.second < rhs.second;};
 
-        for (int i = 1; i < MAX_LEV_DISTANCE + 1; i++)
-        {
-            auto better_word = std::max(replacements[zero_lev_distance_index - i], replacements[zero_lev_distance_index + i], better_word_cmp);
-            if (better_word.first != nullptr)
-            {
-                return better_word.first;
-            }
-        }
+        auto better_word = std::max_element(replacements.begin(), replacements.end(), better_word_cmp);
+        return better_word->first;
 
         return nullptr;
     }

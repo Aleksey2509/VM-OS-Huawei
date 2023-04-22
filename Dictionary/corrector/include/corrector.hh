@@ -86,7 +86,7 @@ struct ILogHandler // defines where log file is
 
 //========================================================================================================================
 
-class Corrector
+class Corrector final
 {
 public:
 
@@ -98,7 +98,7 @@ public:
 private:
 
     const std::string* GetBestWord(const std::string& str) const;
-    bool if_parallel = false;
+    bool if_parallel = true;
 
 public:
     using iterator = custom_containers::HashTable<std::string, size_t>::iterator;
