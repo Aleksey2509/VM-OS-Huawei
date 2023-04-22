@@ -6,4 +6,9 @@ Implement a template queue on lists and stack
 
 ## Build:
 
-Is not implemented yet
+```
+mkdir build
+cd build
+cmake ..
+make
+```
